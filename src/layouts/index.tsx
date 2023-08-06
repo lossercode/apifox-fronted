@@ -1,9 +1,9 @@
 import { EnvironmentFilled } from '@ant-design/icons';
-import { PageContainer } from '@ant-design/pro-components';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Menu } from 'antd';
+import { Breadcrumb, Button, Menu } from 'antd';
 import { useState } from 'react';
 import { Outlet } from 'umi';
+import styles from './index.less';
 
 export default function Page() {
   const [current, setCurrent] = useState('interface');
@@ -41,8 +41,8 @@ export default function Page() {
   ];
 
   return (
-    <PageContainer ghost>
-      <div>
+    <div className={styles.container}>
+      <div className={styles['container-breadcrumb']}>
         <Breadcrumb
           items={[
             {
@@ -59,14 +59,23 @@ export default function Page() {
             },
           ]}
         />
+        <div className={styles['container-info']}>
+          <Button className={styles['signout-button']} type="primary">
+            退出登录
+          </Button>
+          <span className={styles['username']}>张三</span>
+        </div>
       </div>
-      <Menu
-        onClick={onClick}
-        selectedKeys={[current]}
-        mode="horizontal"
-        items={items}
-      />
+      <div>
+        <Menu
+          onClick={onClick}
+          selectedKeys={[current]}
+          mode="horizontal"
+          items={items}
+          className={styles['container-menu']}
+        />
+      </div>
       <Outlet />
-    </PageContainer>
+    </div>
   );
 }
