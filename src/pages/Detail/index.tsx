@@ -1,3 +1,4 @@
+import MockService from '@/components/MockService';
 import { CloseOutlined } from '@ant-design/icons';
 import type { DescriptionsProps, TabsProps } from 'antd';
 import { Button, Descriptions, Input, Table, Tabs } from 'antd';
@@ -180,6 +181,7 @@ const InterfacePage: React.FC = () => {
           <h2>返回数据</h2>
           <Table className={styles['return-data-table']} columns={columns3} />
         </div>
+        <MockService />
       </div>
     </div>
   );
