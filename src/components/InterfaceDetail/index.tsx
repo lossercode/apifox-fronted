@@ -1,6 +1,150 @@
+import type { ProColumns } from '@ant-design/pro-components';
+import { EditableProTable } from '@ant-design/pro-components';
 import type { DescriptionsProps } from 'antd';
 import { Descriptions, Table } from 'antd';
+import React, { useState } from 'react';
 import styles from './index.less';
+
+const waitTime = (time: number = 100) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, time);
+  });
+};
+
+type DataSourceType = {
+  id: React.Key;
+  title?: string;
+  readonly?: string;
+  decs?: string;
+  state?: string;
+  created_at?: string;
+  update_at?: string;
+  children?: DataSourceType[];
+};
+
+const defaultData: DataSourceType[] = [];
+
+const ReqParaHead = () => {
+  const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
+  const [dataSource, setDataSource] = useState<readonly DataSourceType[]>([]);
+
+  const columns: ProColumns<DataSourceType>[] = [
+    {
+      title: '参数名称',
+      dataIndex: 'paraname',
+      key: 'paraname',
+    },
+    {
+      title: '类型',
+      dataIndex: 'type',
+      key: 'type',
+    },
+    {
+      title: '是否必须',
+      dataIndex: 'isNecessary',
+      key: 'isNecessary',
+    },
+    {
+      title: '示例',
+      dataIndex: 'example',
+      key: 'example',
+    },
+    {
+      title: '备注',
+      dataIndex: 'note',
+      key: 'note',
+    },
+  ];
+
+  return (
+    <>
+      <EditableProTable<DataSourceType>
+        rowKey="id"
+        maxLength={5}
+        loading={false}
+        columns={columns}
+        request={async () => ({
+          data: defaultData,
+          total: 3,
+          success: true,
+        })}
+        value={dataSource}
+        onChange={setDataSource}
+        editable={{
+          type: 'multiple',
+          editableKeys,
+          onSave: async (rowKey, data, row) => {
+            console.log(rowKey, data, row);
+            await waitTime(2000);
+          },
+          onChange: setEditableRowKeys,
+        }}
+      />
+    </>
+  );
+};
+
+const ReqParaBody = () => {
+  const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
+  const [dataSource, setDataSource] = useState<readonly DataSourceType[]>([]);
+
+  const columns: ProColumns<DataSourceType>[] = [
+    {
+      title: '参数名称',
+      dataIndex: 'paraname',
+      key: 'paraname',
+    },
+    {
+      title: '参数值',
+      dataIndex: 'paravalue',
+      key: 'paravalue',
+    },
+    {
+      title: '是否必须',
+      dataIndex: 'isNecessary',
+      key: 'isNecessary',
+    },
+    {
+      title: '默认值',
+      dataIndex: 'default',
+      key: 'default',
+    },
+    {
+      title: '备注',
+      dataIndex: 'note',
+      key: 'note',
+    },
+  ];
+
+  return (
+    <>
+      <EditableProTable<DataSourceType>
+        rowKey="id"
+        maxLength={5}
+        loading={false}
+        columns={columns}
+        request={async () => ({
+          data: defaultData,
+          total: 3,
+          success: true,
+        })}
+        value={dataSource}
+        onChange={setDataSource}
+        editable={{
+          type: 'multiple',
+          editableKeys,
+          onSave: async (rowKey, data, row) => {
+            console.log(rowKey, data, row);
+            await waitTime(2000);
+          },
+          onChange: setEditableRowKeys,
+        }}
+      />
+    </>
+  );
+};
 
 const InterfaceDetail: React.FC = () => {
   const tabsItems: DescriptionsProps['items'] = [
@@ -36,63 +180,7 @@ const InterfaceDetail: React.FC = () => {
     },
   ];
 
-  const columns1 = [
-    {
-      title: '参数名称',
-      dataIndex: 'paraname',
-      key: 'paraname',
-    },
-    {
-      title: '类型',
-      dataIndex: 'type',
-      key: 'type',
-    },
-    {
-      title: '是否必须',
-      dataIndex: 'isNecessary',
-      key: 'isNecessary',
-    },
-    {
-      title: '示例',
-      dataIndex: 'example',
-      key: 'example',
-    },
-    {
-      title: '备注',
-      dataIndex: 'note',
-      key: 'note',
-    },
-  ];
-
-  const columns2 = [
-    {
-      title: '参数名称',
-      dataIndex: 'paraname',
-      key: 'paraname',
-    },
-    {
-      title: '参数值',
-      dataIndex: 'paravalue',
-      key: 'paravalue',
-    },
-    {
-      title: '是否必须',
-      dataIndex: 'isNecessary',
-      key: 'isNecessary',
-    },
-    {
-      title: '默认值',
-      dataIndex: 'default',
-      key: 'default',
-    },
-    {
-      title: '备注',
-      dataIndex: 'note',
-      key: 'note',
-    },
-  ];
-
-  const columns3 = [
+  const columns = [
     {
       title: '名称',
       dataIndex: 'name',
@@ -134,14 +222,14 @@ const InterfaceDetail: React.FC = () => {
         <h2>请求参数</h2>
         <div className={styles['request-para-data']}>
           <h3>Headers:</h3>
-          <Table columns={columns1} />
+          <ReqParaHead />
           <h3 className={styles['data-body']}>Body:</h3>
-          <Table columns={columns2} />
+          <ReqParaBody />
         </div>
       </div>
       <div className={styles['return-data']}>
         <h2>返回数据</h2>
-        <Table className={styles['return-data-table']} columns={columns3} />
+        <Table className={styles['return-data-table']} columns={columns} />
       </div>
     </>
   );
