@@ -13,6 +13,17 @@ declare namespace API {
     data?: Record<string, any>;
   }
 
+  interface createProjectInfo {
+    projectName: string;
+    projectDesc: string;
+  }
+
+  interface createProjectResponse {
+    code: number;
+    msg: string;
+    data: Record<string, any>;
+  }
+
   interface Result_PageInfo_UserInfo__ {
     success?: boolean;
     errorMessage?: string;
