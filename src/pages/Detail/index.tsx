@@ -1,11 +1,41 @@
 import InterfaceDetail from '@/components/InterfaceDetail';
 import MockService from '@/components/MockService';
 import { CloseOutlined } from '@ant-design/icons';
+import {
+  ModalForm,
+  ProForm,
+  ProFormSelect,
+  ProFormText,
+} from '@ant-design/pro-components';
 import type { TabsProps } from 'antd';
-import { Button, Input, Tabs } from 'antd';
+import { Button, Form, Input, Tabs, message } from 'antd';
+import { request } from 'umi';
 import styles from './index.less';
 
 const InterfacePage: React.FC = () => {
+  const createInterface = (values: any) => {
+    console.log('values=', values);
+    return new Promise((resolve) => {
+      request('http://localhost:3000/interface/create', {
+        method: 'POST',
+        data: {
+          method: values.method,
+          path: values.path,
+          interfaceName: values.headerName,
+          interfaceDes: values.headerNote,
+          createTime: new Date(),
+        },
+      })
+        .then((response) => {
+          console.log('response=', response);
+          resolve(true);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    });
+  };
+  const [form] = Form.useForm<{ name: string; company: string }>();
   const items: TabsProps['items'] = [
     {
       key: '1',
@@ -33,9 +63,146 @@ const InterfacePage: React.FC = () => {
         <div className={styles['interface-list']}>接口列表</div>
         <div className={styles.search}>
           <Input className={styles['search-input']} placeholder="搜索接口" />
-          <Button type="primary" className={styles['search-button']}>
-            添加接口
-          </Button>
+          <ModalForm<{
+            name: string;
+            company: string;
+          }>
+            title="新建接口"
+            trigger={
+              <Button type="primary" className={styles['search-button']}>
+                新建接口
+              </Button>
+            }
+            form={form}
+            autoFocusFirstInput
+            modalProps={{
+              destroyOnClose: true,
+              onCancel: () => console.log('run'),
+            }}
+            submitTimeout={2000}
+            onFinish={async (values) => {
+              await createInterface(values);
+              console.log(values.headerName);
+              message.success('提交成功');
+              return true;
+            }}
+          >
+            <ProForm.Group>
+              <ProFormSelect
+                request={async () => [
+                  {
+                    value: 'GET',
+                    label: 'GET',
+                  },
+                  {
+                    value: 'POST',
+                    label: 'POST',
+                  },
+                  {
+                    value: 'PUT',
+                    label: 'PUT',
+                  },
+                  {
+                    value: 'DELETE',
+                    label: 'DELETE',
+                  },
+                ]}
+                width="md"
+                name="method"
+                label="请求方法"
+              />
+              <ProFormText
+                width="md"
+                name="path"
+                label="接口路径"
+                placeholder="请输入接口路径"
+              />
+            </ProForm.Group>
+            <h3>Headers</h3>
+            <ProForm.Group>
+              <ProFormText
+                width="md"
+                name="headerName"
+                label="参数名称"
+                placeholder="请输入参数名称"
+              />
+              <ProFormText
+                width="md"
+                name="type"
+                label="类型"
+                placeholder="请输入类型"
+              />
+              <ProFormText
+                width="md"
+                name="example"
+                label="示例"
+                placeholder="请输入示例"
+              />
+              <ProFormSelect
+                request={async () => [
+                  {
+                    value: true,
+                    label: '是',
+                  },
+                  {
+                    value: false,
+                    label: '否',
+                  },
+                ]}
+                width="md"
+                name="isHeaderNecessary"
+                label="是否必须"
+              />
+              <ProFormText
+                width="md"
+                name="headerNote"
+                label="备注"
+                placeholder="请输入备注"
+              />
+            </ProForm.Group>
+            <h3>Body</h3>
+            <ProForm.Group>
+              <ProFormText
+                width="md"
+                name="bodyName"
+                label="参数名称"
+                placeholder="请输入参数名称"
+              />
+              <ProFormText
+                width="md"
+                name="value"
+                label="参数值"
+                placeholder="请输入参数值"
+              />
+              <ProFormText
+                width="md"
+                name="default"
+                label="默认值"
+                placeholder="请输入默认值"
+              />
+              <ProFormSelect
+                request={async () => [
+                  {
+                    value: true,
+                    label: '是',
+                  },
+                  {
+                    value: false,
+                    label: '否',
+                  },
+                ]}
+                width="md"
+                name="isBodyNecessary"
+                label="是否必须"
+              />
+              <ProFormText
+                width="md"
+                name="note"
+                label="备注"
+                placeholder="请输入备注"
+              />
+            </ProForm.Group>
+          </ModalForm>
         </div>
         <div className={styles['interface-container']}>
           <div className={styles['init-interface']}>
