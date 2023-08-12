@@ -1,8 +1,8 @@
 import { EnvironmentFilled } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Button, Menu } from 'antd';
+import { Breadcrumb, Dropdown, Menu } from 'antd';
 import { useState } from 'react';
-import { Outlet } from 'umi';
+import { Outlet, history } from 'umi';
 import styles from './index.less';
 
 export default function Page() {
@@ -11,6 +11,10 @@ export default function Page() {
   const onClick: MenuProps['onClick'] = (e) => {
     console.log('click ', e);
     setCurrent(e.key);
+  };
+
+  const handleClick = () => {
+    history.push('/projects');
   };
 
   const items: MenuProps['items'] = [
@@ -40,6 +44,13 @@ export default function Page() {
     },
   ];
 
+  const menu = (
+    <Menu>
+      <Menu.Item onClick={handleClick}>个人空间</Menu.Item>
+      <Menu.Item>退出登录</Menu.Item>
+    </Menu>
+  );
+
   return (
     <div className={styles.container}>
       <div className={styles['container-breadcrumb']}>
@@ -60,10 +71,11 @@ export default function Page() {
           ]}
         />
         <div className={styles['container-info']}>
-          <Button className={styles['signout-button']} type="primary">
-            退出登录
-          </Button>
-          <span className={styles['username']}>张三</span>
+          <Dropdown overlay={menu}>
+            <a onClick={(e) => e.preventDefault()}>
+              <span className={styles['username']}>张三</span>
+            </a>
+          </Dropdown>
         </div>
       </div>
       <div>
