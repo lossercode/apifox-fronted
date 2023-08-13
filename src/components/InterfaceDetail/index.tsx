@@ -7,8 +7,9 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import type { DescriptionsProps } from 'antd';
-import { Button, Descriptions, Form, Table } from 'antd';
+import { Button, Descriptions, Form, Table, message } from 'antd';
 import React, { useState } from 'react';
+import { request } from 'umi';
 import styles from './index.less';
 
 const waitTime = (time: number = 100) => {
