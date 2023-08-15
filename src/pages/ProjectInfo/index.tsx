@@ -1,31 +1,32 @@
 import { PageContainer } from '@ant-design/pro-components';
 import Interface from './Components/Interface';
-import Overview from './Components/Overview';
+
 import React,{ useState } from 'react';
 import { useModel } from 'umi';
-const tabList = [{
-    tab: '项目概览',
-      key: 'overview',
-    },
+import ProjectConfig from './Components/ProjectConfig';
+import OperationLog from './Components/OperationLog';
+const tabList = [
     {
-        tab: '接口列表',
+      tab: '接口列表',
       key: 'interface',
     },
     {
-        tab: '操作日志',
+      tab: '操作日志',
       key: 'operationLog',
     },
     {
-        tab: '数据导入',
+      tab: '数据导入',
       key: 'dataImport',
     },
     {
-        tab: '项目管理',
+      tab: '项目管理',
       key: 'projectConfig',
     }];
 const contentList = {
-    overview: <Overview />, // 对应标签页的内容组件
+    // overview: <Overview />, // 对应标签页的内容组件
     interface: <Interface />,
+    projectConfig:<ProjectConfig/>,
+    operationLog: <OperationLog />,
 };
 
   const ProjectInfo = ()=> {
