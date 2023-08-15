@@ -14,7 +14,7 @@ const routes = [
     layout: false,
   },
   {
-    path: '/project/interface/:id',
+    path: '/project/interface',
     component: './ProjectInfo',
     layout: false,
   }

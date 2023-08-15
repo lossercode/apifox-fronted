@@ -1,10 +1,9 @@
 import { PageContainer } from '@ant-design/pro-components';
 import Interface from './Components/Interface';
-
-import React,{ useState } from 'react';
-import { useModel } from 'umi';
+import { useState } from 'react';
 import ProjectConfig from './Components/ProjectConfig';
 import OperationLog from './Components/OperationLog';
+import { history, useLocation } from '@umijs/max';
 const tabList = [
     {
       tab: '接口列表',
@@ -23,24 +22,22 @@ const tabList = [
       key: 'projectConfig',
     }];
 const contentList = {
-    // overview: <Overview />, // 对应标签页的内容组件
     interface: <Interface />,
     projectConfig:<ProjectConfig/>,
     operationLog: <OperationLog />,
 };
 
-  const ProjectInfo = ()=> {
-    const [activeTab, setActiveTab] = useState('interface');
-    const {selectedProject} = useModel('projectModel', (model) => ({
-      selectedProject: model.selectedProject
-    }));
-    const handleTabChange = (key) => {
-        setActiveTab(key);
+const ProjectInfo = ()=> {
+  const [activeTab, setActiveTab] = useState('interface');
+  const handleTabChange = (key) => {
+      setActiveTab(key);
   };
+  let location = useLocation();
+  const title = decodeURIComponent(location.search.split('=')[2])
   return (
     <>
       <PageContainer        
-        title={selectedProject?.projectName}
+        title={title}
         onBack={() => window.history.back()}
         tabList={tabList}
         onTabChange={handleTabChange}

@@ -5,6 +5,8 @@ import type { TabsProps } from 'antd';
 import { Button, Tooltip,Row,Col } from 'antd';
 import s from './index.less';
 import TreeNode from '@/components/InterfaceTree';
+import InterfaceSelect from './Components/InterfaceSelect';
+import InterfaceShow from './Components/InterfaceShow';
 const InterfaceList = () => {
   const text = "新建文件夹";
     return (
@@ -12,8 +14,8 @@ const InterfaceList = () => {
         <Row  style={{ marginBottom: 8 }} >
             <Col span={20}>
                 <Button 
-                    icon={<SearchOutlined />} 
-                    className={s.search} 
+                  icon={<SearchOutlined />} 
+                  className={s.search} 
                 >接口名</Button>
             </Col>
             <Col span={4}>
@@ -33,36 +35,15 @@ const InterfaceList = () => {
 }
 
 const Interface = () => {
-    const items: TabsProps['items'] = [
-        {
-          key: '1',
-          label: '接口详情',
-          children: <InterfaceDetail />,
-        },
-        {
-          key: '2',
-          label: '编辑',
-        },
-        {
-          key: '3',
-          label: '测试',
-        },
-        {
-          key: '4',
-          label: 'Mock服务',
-          children: <MockService />,
-        },
-      ];
+
       return (
         <div className={s.container}>
-            <Row gutter={16}>
-            <Col className={s.gutterrow} span={5}>
-                <InterfaceList/>
-            </Col>
-            <Col className={s.gutterrow} span={19}>
-                <div className={s.gutter}>如果是按就展示接口详情</div>
-            </Col>
-            </Row>
+          <div className={s.leftContent}>
+            <InterfaceSelect/>
+          </div>
+          <div className={s.rightContent}> 
+            <InterfaceShow/>
+          </div>
         </div>
       );
 }

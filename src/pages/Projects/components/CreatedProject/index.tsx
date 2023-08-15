@@ -102,8 +102,10 @@ const CreatedProject = () => {
             onClick: () => {
               setSelectedProject(record);
               history.push({
-                pathname: `/project/interface/${record.id}`,
-              });
+                pathname: '/project/interface',
+                search: `?projectId=${record.id}&projectName=${encodeURIComponent(record.projectName)}`
+              },
+            );
             },
           };
         }}
