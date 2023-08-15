@@ -1,0 +1,9 @@
+.container {
+  padding: 0 40px;
+}
+.search {
+  width: 90%;
+}
+.gutter {
+  background: pink;
+}
