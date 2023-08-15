@@ -366,20 +366,20 @@ export default function TreeNode() {
       setIsModalVisible(false);
     }
 
-    const getNodeTreeMenu = () =>{
-      return <div className={s.toolBarContainer}>
-          <div className={s.toolBarItem}>
-             <Tooltip placement="bottom" title="添加接口" onClick={handleAddInterface}>
-            <PlusCircleOutlined />
-             </Tooltip>
-          </div>
-           <div className={s.toolBarItem}>
-            <Tooltip placement="bottom" title="修改文件名"  onClick={handleEditInterface}>
-            <EditOutlined />
+const getNodeTreeMenu = () =>{
+    return <div className={s.toolBarContainer}>
+        <div className={s.toolBarItem}>
+            <Tooltip placement="bottom" title="添加接口" onClick={handleAddInterface}>
+          <PlusCircleOutlined />
             </Tooltip>
-         </div>
-      </div>
-    }
+        </div>
+          <div className={s.toolBarItem}>
+          <Tooltip placement="bottom" title="修改文件名"  onClick={handleEditInterface}>
+          <EditOutlined />
+          </Tooltip>
+        </div>
+    </div>
+  }
   return (
     <>
         <Row>

@@ -5,19 +5,9 @@
 }
 .container > .leftContent {
   width: 20%;
-  background: #f6f8f9;
 }
 .container > .rightContent {
+  background-color: #f6f8f9;
   width: 80%;
-  background: pink;
-  margin-left: 20px;
-}
-.search {
-  width: 90%;
-}
-.gutterrow {
-  background: #f6f8f9;
-}
-.gutter {
-  background: pink;
+  margin-left: 10px;
 }

@@ -1,7 +1,12 @@
-import InterfaceDetail from "@/components/InterfaceDetail";
-import MockService from "@/components/MockService";
-
+import { Tabs, TabsProps } from "antd";
+import s from './index.less';
+import InterfaceDetail from "./Components/InterfaceDetail";
+import MockService from "./Components/MockService";
 const InterfaceShow =()=>{
+    const onChange = (key: string) => {
+        console.log(key);
+      };
+      
     const items: TabsProps['items'] = [
         {
           key: '1',
@@ -23,9 +28,12 @@ const InterfaceShow =()=>{
         },
       ];
     return (
-    <>
-    <div>如果是按就展示接口详情</div>
-    </>)
+    <div className={s.container}>
+        <Tabs 
+        defaultActiveKey="1" 
+        items={items} 
+        onChange={onChange} />
+    </div>)
 }
 
 export default InterfaceShow;
