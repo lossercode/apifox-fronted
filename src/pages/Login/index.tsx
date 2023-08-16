@@ -8,6 +8,7 @@ import {
 } from '@ant-design/pro-components';
 import { message } from 'antd';
 import { history } from 'umi';
+<<<<<<< HEAD
 
 const LoginPage: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -36,6 +37,33 @@ const LoginPage: React.FC = () => {
     <ProConfigProvider hashed={false}>
       {contextHolder}
       <div style={{ backgroundColor: 'white' }}>
+=======
+import s from './index.less';
+const LoginPage: React.FC = () => {
+  const [messageApi, contextHolder] = message.useMessage();
+  const handleSubmit = async (values: API.LoginParams) => {
+      const res = await login(values);
+      if (res.code === 200) {
+        localStorage.setItem('token', res.data.token);
+        messageApi.open({
+          type: 'success',
+          content: res.msg,
+        });
+        history.push('/main');
+      }else{
+        messageApi.open({
+          type: 'error',
+          content: res.msg,
+        })
+      }
+    };
+
+  return (
+    <div className={s.container}>
+    <ProConfigProvider hashed={false}>
+      <div style={{ backgroundColor: 'white' }}>
+      {contextHolder}
+>>>>>>> fy
         <LoginForm
           logo="https://github.githubassets.com/images/modules/logos_page/Octocat.png"
           title="HTTP接口管理平台"
@@ -45,12 +73,20 @@ const LoginPage: React.FC = () => {
           }}
         >
           <ProFormText
+<<<<<<< HEAD
             name="username"
+=======
+            name="userAccount"
+>>>>>>> fy
             fieldProps={{
               size: 'large',
               prefix: <UserOutlined className={'prefixIcon'} />,
             }}
+<<<<<<< HEAD
             placeholder={'用户名: admin or user'}
+=======
+            placeholder={'请输入用户名'}
+>>>>>>> fy
             rules={[
               {
                 required: true,
@@ -59,12 +95,20 @@ const LoginPage: React.FC = () => {
             ]}
           />
           <ProFormText.Password
+<<<<<<< HEAD
             name="password"
+=======
+            name="userPassword"
+>>>>>>> fy
             fieldProps={{
               size: 'large',
               prefix: <LockOutlined className={'prefixIcon'} />,
             }}
+<<<<<<< HEAD
             placeholder={'密码: ant.design'}
+=======
+            placeholder={'请输入密码'}
+>>>>>>> fy
             rules={[
               {
                 required: true,
@@ -91,6 +135,10 @@ const LoginPage: React.FC = () => {
         </LoginForm>
       </div>
     </ProConfigProvider>
+<<<<<<< HEAD
+=======
+    </div>
+>>>>>>> fy
   );
 };
 
