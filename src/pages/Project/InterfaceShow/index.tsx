@@ -2,6 +2,7 @@ import { Tabs, TabsProps } from "antd";
 import s from './index.less';
 import InterfaceDetail from "./Components/InterfaceDetail";
 import MockService from "./Components/MockService";
+import InterfaceEdit from "./Components/InterfaceEdit";
 const InterfaceShow =()=>{
     const onChange = (key: string) => {
         console.log(key);
@@ -16,6 +17,7 @@ const InterfaceShow =()=>{
         {
           key: '2',
           label: '编辑',
+          children: <InterfaceEdit />
         },
         {
           key: '3',

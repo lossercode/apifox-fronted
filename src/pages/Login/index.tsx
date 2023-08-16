@@ -19,7 +19,7 @@ const LoginPage: React.FC = () => {
           type: 'success',
           content: res.msg,
         });
-        history.push('/project');
+        history.push('/main');
       }else{
         messageApi.open({
           type: 'error',

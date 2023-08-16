@@ -66,7 +66,7 @@ const JoinedProject = () => {
             onClick: () => {
               setSelectedProject(record);
               history.push({
-                pathname: `/project/interface?projectId=${record.id}&projectName=${encodeURIComponent(record.projectName)}`,
+                pathname: `/project/${record.id}`,
               });
             },
           };

@@ -9,13 +9,13 @@ const routes = [
     layout: false,
   },
   {
-    path: '/project',
-    component: './Projects',
+    path: '/main',
+    component: './Main',
     layout: false,
   },
   {
-    path: '/project/interface',
-    component: './ProjectInfo',
+    path: '/project/:id',
+    component: './Project',
     layout: false,
   }
   // {

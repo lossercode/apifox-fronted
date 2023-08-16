@@ -49,12 +49,12 @@ const ProjectInfo = ()=> {
     operationLog: <OperationLog />,
     dataImport:<DataImport/>  
   };
-  let location = useLocation();
-  const title = decodeURIComponent(location.search.split('=')[2])
+  // let location = useLocation();
+  // const title = decodeURIComponent(location.search.split('=')[2])
   return (
     <>
       <PageContainer        
-        title={title}
+        title='返回主页'
         onBack={() => history.back()}
         tabList={tabList}
         onTabChange={handleTabChange}
