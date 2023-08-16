@@ -2,12 +2,22 @@
 // 该文件由 OneAPI 自动生成，请勿手动修改！
 import { request } from '@umijs/max';
 
+<<<<<<< HEAD
 export async function login(params: API.LoginParams) {
   return request<API.LoginRespnse>('/api/v1/login', {
     method: 'PUT',
     params: {
       ...params,
     },
+=======
+export async function login(body: API.LoginParams) {
+  return request<API.LoginRespnse>('/user/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body
+>>>>>>> fy
   });
 }
 
@@ -51,8 +61,11 @@ export async function addUser(
 /** 此处后端没有提供注释 GET /api/v1/user/${param0} */
 export async function getUserDetail(
   params: {
+<<<<<<< HEAD
     // path
     /** userId */
+=======
+>>>>>>> fy
     userId?: string;
   },
   options?: { [key: string]: any },
