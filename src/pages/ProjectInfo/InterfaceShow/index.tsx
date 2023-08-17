@@ -2,6 +2,7 @@ import { Card, Col, Divider, Form, Input, Row, Select, Space, Tabs, TabsProps } 
 import s from './index.less';
 import InterfaceDetail from "./Components/InterfaceDetail";
 import MockService from "./Components/MockService";
+import InterfaceEdit from "./Components/InterfaceEdit";
 import { ProFormText, ProFormSelect, ProFormDateRangePicker, FooterToolbar, ProForm, ProFormTextArea } from "@ant-design/pro-components";
 
 const InterfaceForm = () =>{
@@ -128,7 +129,7 @@ const InterfaceShow =()=>{
           {
             key: '2',
             label: '编辑',
-            children: <InterfaceForm />,
+            children: <InterfaceEdit />,
           },
           {
             key: '3',
