@@ -17,6 +17,8 @@ export default function InterfaceEdit() {
   ];
 
   const {
+    method,
+    setMethod,
     basicInfo,
     setBasicInfo,
     reqParams,
@@ -48,7 +50,7 @@ export default function InterfaceEdit() {
     tempBody[resIndex].body = resBodyProxy;
     // 发送所有数据到后端
     const data = {
-      id: 'uu',
+      method: method,
       ...basicInfoRef.getFieldsValue(),
       reqBody: reqBody,
       reqCookie: reqCookie,
@@ -68,8 +70,9 @@ export default function InterfaceEdit() {
               <Input
                 addonBefore={
                   <Select
-                    defaultValue={basicInfo.method ? basicInfo.method : 'GET'}
+                    defaultValue={method || 'GET'}
                     popupMatchSelectWidth={120}
+                    onChange={setMethod}
                   >
                     {methods.map((method) => (
                       <Select.Option value={method} key={method}>

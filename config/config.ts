@@ -9,10 +9,7 @@ export default defineConfig({
   layout: {
     title: 'HTTP接口管理平台',
   },
-<<<<<<< HEAD
-=======
   dva: {},
->>>>>>> fy
   routes,
   npmClient: 'npm',
 });

@@ -15,7 +15,9 @@ export default function Request() {
     {
       key: '1',
       label: `Params`,
-      children: <ReqForm data={reqParams} setData={setReqParams} />,
+      children: (
+        <ReqForm data={reqParams} setData={setReqParams} isBody={false} />
+      ),
     },
     {
       key: '2',
@@ -25,12 +27,16 @@ export default function Request() {
     {
       key: '3',
       label: `Header`,
-      children: <ReqForm data={reqHeader} setData={setReqHeader} />,
+      children: (
+        <ReqForm data={reqHeader} setData={setReqHeader} isBody={false} />
+      ),
     },
     {
       key: '4',
       label: `Cookie`,
-      children: <ReqForm data={reqCookie} setData={setReqCookie} />,
+      children: (
+        <ReqForm data={reqCookie} setData={setReqCookie} isBody={false} />
+      ),
     },
   ];
 

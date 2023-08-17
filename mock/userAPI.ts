@@ -1,39 +1,14 @@
 import { defineMock } from 'umi';
 
 export default defineMock({
-<<<<<<< HEAD
-  'POST /project/create': (req: any, res: any) => {
-    res.json({
-      code: 200,
-      data: {
-        projectId: 1,
-      },
-      msg: '创建成功',
-    });
-  },
-
-  'GET /api/v1/queryUserList': (req: any, res: any) => {
-    res.json({
-      success: true,
-      data: { list: users },
-      errorCode: 0,
-    });
-  },
-  'PUT /api/v1/login': (req: any, res: any) => {
-    res.json({
-      success: true,
-      errorCode: 0,
-    });
-  },
-=======
   'POST /user/login': (req: any, res: any) => {
     res.json({
       code: 200,
       data: {
         token: 'dghbwikefbnklwef',
-        userName: '123' ,
+        userName: '123',
         userAvatar: 'jysdbfiyubwilfb',
-        userRole: 1
+        userRole: 1,
       },
       msg: '登录成功',
     });
@@ -45,24 +20,24 @@ export default defineMock({
   },
 
   'GET /project/getAll': (req: any, res: any) => {
-    if(req.query.type === '0'){
-    res.json({
-      data: [
-        {
-          id: 1,
-          projectName: '项目1 siengiu',
-          projectDesc: '项目1的简介',
-          createdAt: '2021-08-01',
-        },
-        {
-          id: 2,
-          projectName: '项目2 jksngi',
-          projectDesc: '项目2的简介',
-          createdAt: '2021-08-01',
-        },
-      ]
-    })}
-    else{
+    if (req.query.type === '0') {
+      res.json({
+        data: [
+          {
+            id: 1,
+            projectName: '项目1 siengiu',
+            projectDesc: '项目1的简介',
+            createdAt: '2021-08-01',
+          },
+          {
+            id: 2,
+            projectName: '项目2 jksngi',
+            projectDesc: '项目2的简介',
+            createdAt: '2021-08-01',
+          },
+        ],
+      });
+    } else {
       res.json({
         data: [
           {
@@ -79,8 +54,8 @@ export default defineMock({
             projectCreator: '李四',
             joinedAt: '2021-08-02',
           },
-        ]
-      })
+        ],
+      });
     }
   },
 
@@ -92,7 +67,7 @@ export default defineMock({
         projectId: 1,
       },
     });
-  }
+  },
 
   // 'PUT /api/v1/login': (req: any, res: any) => {
   //   res.json({
@@ -100,5 +75,4 @@ export default defineMock({
   //     errorCode: 0,
   //   });
   // },
->>>>>>> fy
 });

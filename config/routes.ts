@@ -9,23 +9,6 @@ const routes = [
     layout: false,
   },
   {
-<<<<<<< HEAD
-    path: '/projects',
-    component: './Projects',
-    layout: false,
-  },
-  {
-    path: '/projects/:id',
-    component: '@/layouts/index',
-    layout: false,
-    routes: [
-      {
-        path: '/projects/:id',
-        component: './Detail/index',
-      },
-    ],
-  },
-=======
     path: '/main',
     component: './Main',
     layout: false,
@@ -34,11 +17,11 @@ const routes = [
     path: '/project/:id',
     component: './Project',
     layout: false,
-  }
+  },
   // {
   //   path: '/projects/details',
   //   name: '接口列表',
-  //   // layout: 
+  //   // layout:
   //   //   {
   //   //     navTheme: "light",
   //   //     primaryColor: "#1890ff",
@@ -84,7 +67,6 @@ const routes = [
   //     },
   //   ],
   // },
->>>>>>> fy
 ];
 
 export default routes;
