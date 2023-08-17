@@ -17,6 +17,10 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
 
   useEffect(() => {
     setResBodyProxy(initValue);
+    // 组件销毁的时候清空
+    return () => {
+      setResBodyProxy([]);
+    };
   }, [initValue]);
 
   const fieldChange = (value: string | number, index: number, key: string) => {
@@ -28,6 +32,7 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
       ...resBodyProxy.slice(index + 1),
     ]);
   };
+  // 添加一行数据
   const addField = (index: number, type: string) => {
     const current = { ...resBodyProxy[index] };
     const newInfo = { ...resBodyProxy[index] };
@@ -54,6 +59,7 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
         }
       }
       if (i < resBodyProxy.length) {
+        // 在中间插入数据
         setResBodyProxy([
           ...resBodyProxy.slice(0, i),
           newInfo,
