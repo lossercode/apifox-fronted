@@ -3,7 +3,6 @@ import { PageContainer } from '@ant-design/pro-components';
 import { Button, Form, Input, Modal,Space } from 'antd';
 import CreatedProject from './components/CreatedProject';
 import s from './index.less';
-
 import { createProject } from '@/services/demo/ProjectsController';
 import { useState } from 'react';
 import { history } from 'umi';
@@ -14,7 +13,8 @@ interface collectionCreateFormProps {
   onCreate: (values: API.createProjectParams) => void;
   onCancel: () => void;
 }
-//项目创建表单
+
+//项目创建表单 导入多一个上传swagger文件的功能
 const CollectionCreateForm: React.FC<collectionCreateFormProps> = ({
   open,
   onCreate,
@@ -58,8 +58,6 @@ const CollectionCreateForm: React.FC<collectionCreateFormProps> = ({
         <Form.Item name="projectDesc" label="项目描述">
           <Input type="textarea" />
         </Form.Item>
-        {/* <Form.Item name="modifier" className="collection-create-form_last-form-item">
-        </Form.Item> */}
       </Form>
     </Modal>
   );
@@ -78,8 +76,14 @@ const ProjectsPage: React.FC = () => {
       key: 'joined',
     },
   ];
+  const [dataFromChild, setDataFromChild] = useState([]);
+
+  const handleDataFromChild = (data) => {
+    console.log(data);
+    // setDataFromChild(data);
+  };
   const contentList = {
-    created: <CreatedProject />, // 对应标签页的内容组件
+    created: <CreatedProject onDataUpdate={handleDataFromChild}/>, // 对应标签页的内容组件
     joined: <JoinedProject />,
   };
   const tabBarExtraContent = ()=>{
@@ -87,7 +91,7 @@ const ProjectsPage: React.FC = () => {
       <>
       <Space>
         <Button key="1" icon={<PlusOutlined />}>
-              导入项目
+              Swagger导入
         </Button>
         <Button
               key="2"
@@ -116,10 +120,8 @@ const ProjectsPage: React.FC = () => {
       history.push(`/projects/${res.data.projectId}`);
       // setConfirmLoading(false);
     } else {
-      // message.error(res.msg);
       console.log("创建失败")
     }
-
     setOpen(false);
   };
   return (

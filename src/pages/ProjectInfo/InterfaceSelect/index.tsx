@@ -2,6 +2,7 @@ import { SearchOutlined, PlusOutlined, PlusCircleOutlined, EditOutlined } from "
 import { Row, Col, Button, Tooltip } from "antd";
 import s from "./index.less";
 import Tree, { DataNode, DirectoryTreeProps } from "antd/es/tree";
+import { useModel } from "@umijs/max";
 
 const TreeTools = () => {
     const handleAddInterface = () =>{
@@ -32,6 +33,9 @@ const TreeTools = () => {
 
 const InterfaceTree = () =>{
     const { DirectoryTree } = Tree;
+    const { setSelectedInterface } = useModel('projectModel', (model) => ({
+      setSelectedInterface: model.setSelectedInterface,
+    }));
     const treeData: DataNode[] = [
         {
           title: '文件夹1',
@@ -50,14 +54,14 @@ const InterfaceTree = () =>{
           ],
         },
       ];
-      const onSelect: DirectoryTreeProps['onSelect'] = (keys, info) => {
-        console.log('Trigger Select', keys, info);
-        
-      };
-    
-      const onExpand: DirectoryTreeProps['onExpand'] = (keys, info) => {
-        console.log('Trigger Expand', keys, info);
-      };
+    const onSelect: DirectoryTreeProps['onSelect'] = (keys, info) => {
+      //设全局，用于接口详情展示
+      setSelectedInterface(keys[0] as string);
+    };
+  
+    // const onExpand: DirectoryTreeProps['onExpand'] = (keys, info) => {
+    //   console.log('Trigger Expand', keys, info);
+    // };
     return (<>
         <Row>
           <Col span={14}>
@@ -65,7 +69,7 @@ const InterfaceTree = () =>{
                 multiple
                 defaultExpandAll
                 onSelect={onSelect}
-                onExpand={onExpand}
+                // onExpand={onExpand}
                 treeData={treeData}
             /> 
           </Col>
@@ -76,7 +80,7 @@ const InterfaceTree = () =>{
     </>)
 }
 
-const InterfaceSelect = ()=>{
+const InterfaceSelect = (props)=>{
     const text = "新建文件夹";
     return (
         <>

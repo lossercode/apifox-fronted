@@ -24,6 +24,16 @@ export async function createProject(
 }
 
 
-export async function updateProjectInfo(){
-  
+export async function updateProjectInfo(
+  body?: API.createProjectParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.createProjectResponse>('/project/update', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
 }

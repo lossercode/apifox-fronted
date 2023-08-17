@@ -67,7 +67,18 @@ export default defineMock({
         projectId: 1,
       },
     });
-  }
+  },
+
+  'POST /project/update': (req: any, res: any) => {
+    res.json({
+      code: 200,
+      msg: '修改成功',
+      data: {},
+    });
+  },
+
+
+  
 
   // 'PUT /api/v1/login': (req: any, res: any) => {
   //   res.json({
