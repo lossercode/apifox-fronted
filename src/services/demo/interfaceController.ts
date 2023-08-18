@@ -9,9 +9,9 @@ export async function getInterfaceInfo(id: number) {
 }
 
 // 修改接口
-export async function updateInterfaceInfo(id: number){
-  return request<API.InterfaceInfo>(`/interface/updateInterfaceInfo`,{
+export async function updateInterfaceInfo(id: number) {
+  return request<API.InterfaceInfo>(`/interface/updateInterfaceInfo`, {
     method: 'POST',
-    data: {id: id},
-  }
+    data: { id: id },
+  });
 }
