@@ -12,12 +12,12 @@ const InterfaceShow =()=>{
         {
           key: '1',
           label: '接口详情',
-          children: <InterfaceDetail />,
+          children: <InterfaceDetail id={1}/>,
         },
         {
           key: '2',
           label: '编辑',
-          children: <InterfaceEdit />
+          children: <InterfaceEdit id={1}/>
         },
         {
           key: '3',

@@ -116,27 +116,6 @@ export const Response = () => {
         </Form.Item>
       </Form>
 
-      <Row className={styles['req-json']} align="middle">
-        <Col span={10}>
-          <span>节点</span>
-        </Col>
-        <Col span={3}>
-          <span>类型</span>
-        </Col>
-        <Col span={3}>
-          <span>Mock</span>
-        </Col>
-        <Col span={3}>
-          <span>中文名</span>
-        </Col>
-        <Col span={3}>
-          <span>说明</span>
-        </Col>
-        <Col span={2}>
-          <span>操作</span>
-        </Col>
-      </Row>
-
       <Body initValue={resInfo[resIndex].body} />
     </>
   );

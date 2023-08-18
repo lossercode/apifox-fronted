@@ -3,8 +3,9 @@ import { useModel } from 'umi';
 import styles from './index.less';
 import Request from './request';
 import { Response } from './res';
+import { updateInterfaceInfo } from '@/services/demo/interfaceController';
 
-export default function InterfaceEdit() {
+export default function InterfaceEdit({id}: {id: number}) {
   const [basicInfoRef] = Form.useForm();
   const methods = [
     'GET',
@@ -32,7 +33,7 @@ export default function InterfaceEdit() {
     resIndex,
   } = useModel('interfaceModel', (model) => model);
 
-  const save = () => {
+  const save = async () => {
     // 设置基本信息, 直接发送getFieldsValue
     setBasicInfo(() => basicInfoRef.getFieldsValue());
     // 将代理数组赋值给resbody
@@ -59,6 +60,7 @@ export default function InterfaceEdit() {
       res: tempBody,
     };
     console.log(data);
+    const result = await updateInterfaceInfo(id)
   };
 
   return (

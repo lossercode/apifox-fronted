@@ -1,4 +1,13 @@
 import { useState } from 'react';
+// 接口基础信息
+export type BasicInfoType = {
+  url: string;
+  name: string;
+  statu: string;
+  director: string;
+  des: string;
+};
+// 请求参数的表格字段名称
 export type ReqType = {
   id: React.Key;
   name?: string;
@@ -7,6 +16,7 @@ export type ReqType = {
   mock?: { id: number; label: string }[];
 };
 
+// 响应体表格的参数
 export type ResBodyType = {
   [key: string]: string | number | boolean | string[];
   id: number;
@@ -15,20 +25,26 @@ export type ResBodyType = {
   mock: '';
   name: string;
   des: string;
+  // 缩进，当有子节点的时候需要设置缩进
   indent: number;
   child: boolean;
 };
 
+// 响应体的基本信息，可以设置多个响应体
 export type ResInfo = {
   [key: string]: string | number | ResBodyType[];
+  // 响应码
   code: number;
+  // 响应体的名称
   name: string;
+  // 响应类型：json / xml
   type: string;
+  // 响应体的具体数据
   body: ResBodyType[];
 };
 export default function useInfaModel() {
   const [method, setMethod] = useState<string>('');
-  const [basicInfo, setBasicInfo] = useState({
+  const [basicInfo, setBasicInfo] = useState<BasicInfoType>({
     url: '',
     name: '',
     statu: '',
