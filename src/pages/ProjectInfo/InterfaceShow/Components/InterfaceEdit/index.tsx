@@ -3,8 +3,9 @@ import { useModel } from 'umi';
 import styles from './index.less';
 import Request from './request';
 import { Response } from './res';
+import { updateInterfaceInfo } from '@/services/demo/interfaceController';
 
-export default function InterfaceEdit() {
+export default function InterfaceEdit({id}: {id: number}) {
   const [basicInfoRef] = Form.useForm();
   const methods = [
     'GET',
@@ -17,6 +18,8 @@ export default function InterfaceEdit() {
   ];
 
   const {
+    method,
+    setMethod,
     basicInfo,
     setBasicInfo,
     reqParams,
@@ -30,7 +33,7 @@ export default function InterfaceEdit() {
     resIndex,
   } = useModel('interfaceModel', (model) => model);
 
-  const save = () => {
+  const save = async () => {
     // 设置基本信息, 直接发送getFieldsValue
     setBasicInfo(() => basicInfoRef.getFieldsValue());
     // 将代理数组赋值给resbody
@@ -48,7 +51,7 @@ export default function InterfaceEdit() {
     tempBody[resIndex].body = resBodyProxy;
     // 发送所有数据到后端
     const data = {
-      id: 'uu',
+      method: method,
       ...basicInfoRef.getFieldsValue(),
       reqBody: reqBody,
       reqCookie: reqCookie,
@@ -57,6 +60,7 @@ export default function InterfaceEdit() {
       res: tempBody,
     };
     console.log(data);
+    const result = await updateInterfaceInfo(id)
   };
 
   return (
@@ -68,8 +72,9 @@ export default function InterfaceEdit() {
               <Input
                 addonBefore={
                   <Select
-                    defaultValue={basicInfo.method ? basicInfo.method : 'GET'}
+                    defaultValue={method || 'GET'}
                     popupMatchSelectWidth={120}
+                    onChange={setMethod}
                   >
                     {methods.map((method) => (
                       <Select.Option value={method} key={method}>

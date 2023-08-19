@@ -1,26 +1,23 @@
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined,CloudOutlined, UploadOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { Button, Form, Input, Modal,Space } from 'antd';
+import { Button, Form, Input, Modal,Space, Upload, message } from 'antd';
 import CreatedProject from './components/CreatedProject';
 import s from './index.less';
 import { createProject } from '@/services/demo/ProjectsController';
 import { useState } from 'react';
 import { history } from 'umi';
 import JoinedProject from './components/JoinedProject';
+import { API } from '@/services/demo/typings';
 
 interface collectionCreateFormProps {
+  type:number;
   open: boolean;
   onCreate: (values: API.createProjectParams) => void;
   onCancel: () => void;
 }
 
-//项目创建表单 导入多一个上传swagger文件的功能
-const CollectionCreateForm: React.FC<collectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel,
-}) => {
-  // const [confirmLoading, setConfirmLoading] = useState(false);
+const CreateProjectForm: React.FC<collectionCreateFormProps> = ({type,open,onCreate,onCancel}) => {
+  const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
   const onOk = () => {
     form.validateFields() //通过校验
@@ -32,7 +29,13 @@ const CollectionCreateForm: React.FC<collectionCreateFormProps> = ({
         console.log('Validate Failed:', info);
       });
   };
-
+  const normFile = (e: any) => {
+    console.log('Upload event:', e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e?.fileList;
+  };
   return (
     <Modal
       open={open}
@@ -40,7 +43,7 @@ const CollectionCreateForm: React.FC<collectionCreateFormProps> = ({
       okText="创建"
       cancelText="取消"
       onCancel={onCancel}
-      // confirmLoading={confirmLoading}
+      confirmLoading={confirmLoading}
       onOk={onOk}
     >
       <Form
@@ -58,6 +61,22 @@ const CollectionCreateForm: React.FC<collectionCreateFormProps> = ({
         <Form.Item name="projectDesc" label="项目描述">
           <Input type="textarea" />
         </Form.Item>
+        {type == 0 ? (<Form.Item
+          name="projectFile"
+          label="Swagger文档"
+          valuePropName="fileList"
+          getValueFromEvent={normFile}
+          rules={[{ required: true, message: '请上传接口文档!' }]}
+        >
+          <Upload 
+            name="logo" 
+            action="/upload.do" 
+            listType="text"
+            maxCount={1}
+            >
+            <Button icon={<UploadOutlined />}>Click to upload</Button>
+          </Upload>
+        </Form.Item>):''}
       </Form>
     </Modal>
   );
@@ -65,6 +84,7 @@ const CollectionCreateForm: React.FC<collectionCreateFormProps> = ({
 
 const ProjectsPage: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const [type, setType] = useState(0);
   const [activeTab, setActiveTab] = useState('created'); // 默认激活的标签页
   const tabList = [
     {
@@ -76,21 +96,22 @@ const ProjectsPage: React.FC = () => {
       key: 'joined',
     },
   ];
-  const [dataFromChild, setDataFromChild] = useState([]);
-
-  const handleDataFromChild = (data) => {
-    console.log(data);
-    // setDataFromChild(data);
-  };
   const contentList = {
-    created: <CreatedProject onDataUpdate={handleDataFromChild}/>, // 对应标签页的内容组件
+    created: <CreatedProject/>, // 对应标签页的内容组件
     joined: <JoinedProject />,
   };
   const tabBarExtraContent = ()=>{
     return (
       <>
       <Space>
-        <Button key="1" icon={<PlusOutlined />}>
+        <Button 
+              key="1" 
+              icon={<CloudOutlined/>}
+              onClick={() => {
+                setType(0);
+                setOpen(true);
+              }}
+              >
               Swagger导入
         </Button>
         <Button
@@ -98,6 +119,7 @@ const ProjectsPage: React.FC = () => {
               type="primary"
               icon={<PlusOutlined />}
               onClick={() => {
+                setType(1);
                 setOpen(true);
               }}
             >
@@ -107,20 +129,17 @@ const ProjectsPage: React.FC = () => {
       </>
     )
   }
-  const handleTabChange = (key) => {
-    setActiveTab(key);
-  };
 
   const onCreate = async (values: API.createProjectParams) => {
-    //拿到这个表单的值 发送给后端
-    // setConfirmLoading(true);
     const res = await createProject(values);
     if (res.code === 200) {
-      // message.success(res.msg);
-      history.push(`/projects/${res.data.projectId}`);
-      // setConfirmLoading(false);
+      message.success(res.msg);
+      history.push({
+        pathname: '/project/interface',
+        search: `?projectId=${res.data.id}&projectName=${encodeURIComponent(res.data.projectName)}`
+      });
     } else {
-      console.log("创建失败")
+      message.error(res.msg);
     }
     setOpen(false);
   };
@@ -130,11 +149,12 @@ const ProjectsPage: React.FC = () => {
         title ='项目列表'
         tabList={tabList}
         tabBarExtraContent={tabBarExtraContent()}
-        onTabChange={handleTabChange}
+        onTabChange={(key)=>{setActiveTab(key)}}
       >
       </PageContainer>
       {contentList[activeTab]}
-      <CollectionCreateForm
+      <CreateProjectForm
+        type={type}
         open={open}
         onCreate={onCreate}
         onCancel={() => {

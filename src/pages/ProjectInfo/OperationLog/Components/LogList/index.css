@@ -1,0 +1,13 @@
+.title-box {
+  display: flex;
+}
+.title-box .delete-button {
+  display: none;
+  padding-left: 20px;
+}
+.title-box:hover .delete-button {
+  display: inline-block;
+}
+.site-tree-search-value {
+  color: #f50;
+}

@@ -9,10 +9,10 @@ import s from './index.less';
 import DataImport from './DataImport';
 //由于Interface列表组件比较复杂 所以单独写一个组件
 const Interface = () => {
-  const [interfaceId, setInterfaceId] = useState<number>()
-  const handleSetInterfaceId = (newValue:number)=>{
-    setInterfaceId(newValue);
-  }
+  // const [interfaceId, setInterfaceId] = useState<number>()
+  // const handleSetInterfaceId = (newValue:number)=>{
+  //   setInterfaceId(newValue);
+  // }
   
   return (
     <div className={s.container}>

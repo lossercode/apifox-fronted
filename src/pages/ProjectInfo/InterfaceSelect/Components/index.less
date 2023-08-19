@@ -1,0 +1,32 @@
+.container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    > span:first-of-type{
+        margin-right: 70px;
+    }
+}
+.treeTitle {
+    .treeBtn {
+        display: none;
+    }
+}
+.treeTitle:hover {
+    .treeBtn {
+        display: flex;
+    }
+}
+.toolbar{
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    max-height: 40px;
+    text-align: center;
+    // left: `${pageX}px`,
+    // top: `${pageY}px`,
+
+    &-item{
+        margin-right: 10px;
+        align-self: center;
+    }
+}

@@ -64,6 +64,36 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
       }
     }
   };
+
+  // 删除指定的行
+  const deleteField = (index: number) => {
+    const current = { ...resBodyProxy[index] };
+    if (!current.child) {
+      setResBodyProxy([
+        ...resBodyProxy.slice(0, index),
+        ...resBodyProxy.slice(index + 1),
+      ]);
+      return;
+    }
+    let i = index + 1;
+    while (i < resBodyProxy.length) {
+      if (resBodyProxy[i].indent <= resBodyProxy[index].indent) {
+        break;
+      } else {
+        i++;
+      }
+    }
+    setResBodyProxy([
+      ...resBodyProxy.slice(0, index),
+      ...resBodyProxy.slice(i),
+    ]);
+
+    // todo：有child的时候收起
+  };
+
+
+
+
   const addContent = (index: number) => {
     return (
       <>
@@ -84,6 +114,26 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
   };
   return (
     <>
+          <Row className={styles['req-json']} align="middle">
+        <Col span={10}>
+          <span>参数名</span>
+        </Col>
+        <Col span={3}>
+          <span>类型</span>
+        </Col>
+        <Col span={3}>
+          <span>Mock</span>
+        </Col>
+        <Col span={3}>
+          <span>中文名</span>
+        </Col>
+        <Col span={3}>
+          <span>说明</span>
+        </Col>
+        <Col span={2}>
+          <span>操作</span>
+        </Col>
+      </Row>
       {resBodyProxy.map((item, index) => (
         <Row
           key={item.id}
@@ -127,6 +177,12 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
               placeholder="mock"
               bordered={false}
               name="mock"
+              disabled={
+                resBodyProxy[index].type === 'object' ||
+                resBodyProxy[index].type === 'array'
+                  ? true
+                  : false
+              }
               onBlur={(e) => fieldChange(e.target.value, index, 'mock')}
             />
           </Col>
@@ -154,6 +210,7 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
             </Popover>
             <MinusCircleOutlined
               style={{ color: 'red', cursor: 'pointer', marginLeft: '10px' }}
+              onClick={() => deleteField(index)}
             />
           </Col>
         </Row>

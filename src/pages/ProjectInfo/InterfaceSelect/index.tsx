@@ -1,108 +1,145 @@
-import { SearchOutlined, PlusOutlined, PlusCircleOutlined, EditOutlined } from "@ant-design/icons";
-import { Row, Col, Button, Tooltip } from "antd";
+import { DownOutlined, EditOutlined, MinusCircleOutlined, MinusOutlined, PlusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { Space, Tooltip, Tree,Input, Row, Col, Button, Divider, Modal, Form, message } from "antd";
 import s from "./index.less";
-import Tree, { DataNode, DirectoryTreeProps } from "antd/es/tree";
-import { useModel } from "@umijs/max";
+import { useEffect, useState } from "react";
+import { interfaceAddFiles, getAllInterface } from "@/services/demo/interfaceController";
+import { useLocation,useModel } from "@umijs/max";
+import { API } from "@/services/demo/typings";
+import { history } from 'umi';
+const { Search } = Input;
+const location = useLocation();
+const [form] = Form.useForm();
 
-const TreeTools = () => {
-    const handleAddInterface = () =>{
-        // setOperType('add');
-        // setIsModalVisible(true);
-      }
+const InterfaceSelect = () => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [treeData, setTreeData] = useState<API.InterfaceListItem[]>();
+  const [openType, setOpenType] = useState('add');
   
-      const handleEditInterface = () =>{
-        // setOperType('update');
-        // setIsModalVisible(true);
+  const { setAddInterfaceMode,setInterfaceId } = useModel('interfaceModel', (model) => model);
+  const [projectId,setProjectId] = useState<number>(0);
+  
+  useEffect(()=>{
+    setProjectId(parseInt( location.search.split('&')[0].split('=')[1]));
+    getTreeNode();
+  },[])
+
+  const getTreeNode = async()=>{
+    const result = await getAllInterface(projectId);
+    if(result.code === 200){
+      setTreeData(result.data);
+    }else{
+      message.error('获取文件夹失败，请重试')
+    }
+  }
+
+  const addFiles = ()=>{
+    setOpenType('add');
+    setIsModalVisible(true);
+  }
+  const handleCancel = ()=>{
+    setIsModalVisible(false);
+  }
+  const handleOk = ()=>{
+    form.validateFields().then(async(values)=>{
+      const res = await interfaceAddFiles(values);
+      if(res.code === 200){
+        message.success('文件夹添加成功');
+        setIsModalVisible(false);
+        getTreeNode();
+      }else{
+        message.error('文件夹添加失败，请重试')
       }
-    return <>
-    <div className={s.toolBarContainer}>
-        <div className={s.toolBarItem}>
-            <Tooltip placement="bottom" title="添加接口" onClick={handleAddInterface}>
-          <PlusCircleOutlined />
+    })
+  }
+
+  const reqInfo = (_,e)=>{
+    if(e.node.isLeaf == true){
+      setInterfaceId(e.node.key);
+      setAddInterfaceMode(false);//修改模式
+    }else{
+      // console.log('not leaf')
+    }
+  }
+
+  const titleRender = (node)=>{
+    // const { setAddInterfaceMode } = useModel('interfaceModel', (model) => model);
+    return(
+      <>   
+        <div className={s.container}>
+            <span>{node.title}</span>
+            <span>{node.isLeaf ? null :
+            <Space>
+            <Tooltip placement="bottom" title="添加接口" >
+                <PlusCircleOutlined onClick={addInterface}/>
             </Tooltip>
+            <Tooltip placement="bottom" title="修改文件名">
+                <EditOutlined 
+                onClick={(e)=>{}}/>
+            </Tooltip>
+            <Tooltip placement="bottom" title="删除文件夹">
+                <MinusCircleOutlined 
+                onClick={(e)=>{}}/>
+            </Tooltip>
+        </Space>
+        }
+            </span>
         </div>
-          <div className={s.toolBarItem}>
-          <Tooltip placement="bottom" title="修改文件名"  onClick={handleEditInterface}>
-          <EditOutlined />
-          </Tooltip>
-        </div>
-    </div>
-    </>
-}
-
-
-const InterfaceTree = () =>{
-    const { DirectoryTree } = Tree;
-    const { setSelectedInterface } = useModel('projectModel', (model) => ({
-      setSelectedInterface: model.setSelectedInterface,
-    }));
-    const treeData: DataNode[] = [
-        {
-          title: '文件夹1',
-          key: '0',
-          children: [
-            { title: '接口名1', key: '0-0', isLeaf: true },
-            { title: '接口名2', key: '0-1', isLeaf: true },
-          ],
-        },
-        {
-          title: '文件夹2',
-          key: '1',
-          children: [
-            { title: '接口1', key: '1-0', isLeaf: true },
-            { title: '接口2', key: '1-1', isLeaf: true },
-          ],
-        },
-      ];
-    const onSelect: DirectoryTreeProps['onSelect'] = (keys, info) => {
-      //设全局，用于接口详情展示
-      setSelectedInterface(keys[0] as string);
-    };
-  
-    // const onExpand: DirectoryTreeProps['onExpand'] = (keys, info) => {
-    //   console.log('Trigger Expand', keys, info);
-    // };
-    return (<>
-        <Row>
-          <Col span={14}>
-            <DirectoryTree
-                multiple
-                defaultExpandAll
-                onSelect={onSelect}
-                // onExpand={onExpand}
-                treeData={treeData}
-            /> 
-          </Col>
-            <Col span={5}>
-                <TreeTools/>
-            </Col>
-        </Row>
-    </>)
-}
-
-const InterfaceSelect = (props)=>{
-    const text = "新建文件夹";
-    return (
-        <>
-        <Row style={{ marginBottom: 8 }} >
-            <Col span={20}>
-                <Button icon={<SearchOutlined />} className={s.search}>接口名</Button>
-            </Col>
-            <Col span={4}>
-                <Tooltip placement="top" title={text}>
-                    <Button type="primary" icon={<PlusOutlined />}/>
-                </Tooltip>   
-            </Col>
-        </Row>   
-        <Row>
-          <Col span={24}>
-            <InterfaceTree/>
-          </Col>  
-        </Row>         
-        </>
+      </>
     )
+  }
+  const addInterface = ()=>{
+    setAddInterfaceMode(true);
+  }
+  return (
+      <>   
+      <Row gutter={[16, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
+        <Col span={18}>
+        <Search  style={{ marginBottom: 16}}  placeholder="Search" />
+        </Col>
+        <Col span={5}>
+        <Tooltip placement="bottom" title="添加文件夹" >
+          <Button type="primary" onClick={addFiles}>
+            <PlusOutlined />
+          </Button>
+        </Tooltip> 
+        </Col>
+      </Row>
+      <Row gutter={[16, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
+        <Col span={24}>
+          <Tree
+          showLine
+          onSelect={(_, e)=>{reqInfo(_,e)}}
+          switcherIcon={<DownOutlined />}
+          treeData={treeData}
+          titleRender={titleRender}
+          onExpand={()=>console.log('expand')}
+          />
+        </Col>
+      </Row>
+        <Modal
+          title={openType === 'add' ? '添加文件夹' : '修改文件名'} 
+          open={isModalVisible}
+          onCancel={handleCancel}
+          onOk={handleOk} 
+          okText={openType === 'add' ? '添加' :  '修改'} 
+          cancelText="取消"
+          forceRender={true}
+          >
+            <Form
+              form={form}
+            >
+              <Form.Item
+              label="文件夹名"
+              name="filesName"
+              rules={[
+                {required: openType === 'delete'? false : true,message: '文件夹名不允许为空'},
+              ]}
+              >
+                  <Input placeholder="输入文件夹名" />
+              </Form.Item>
+            </Form>   
+        </Modal>
+      </>
+  )
 }
-
-
-
 export default InterfaceSelect;

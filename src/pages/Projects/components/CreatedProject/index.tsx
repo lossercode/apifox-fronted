@@ -88,11 +88,7 @@ const CreatedProject = (props) => {
   const fetchDataSource = async () => {
     const res = await queryProjectList(0);
     setDataSource(res.data);
-    sendDataToParent();
   }
-  const sendDataToParent = () => {
-    props.onDataUpdate(dataSource);
-  };
 
   const handleOk = () => {    
     form.validateFields()
