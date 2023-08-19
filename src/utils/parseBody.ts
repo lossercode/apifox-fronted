@@ -2,7 +2,7 @@
  * @Author: lossercoder
  * @Date: 2023-08-17 14:24:36
  * @LastEditors: lossercode 
- * @LastEditTime: 2023-08-19 13:17:57
+ * @LastEditTime: 2023-08-19 21:38:13
  * @Description: 将body的数据解析成json
  */
 
@@ -14,6 +14,7 @@ type ResultType = {
 }
 const parseBodyToJson = (body: ResBodyType[]) => {
     // 使用递归实现，也可以用双指针迭代
+    // 格式参考 apifox
     let tempEnd = body.length
     const parse = (body: ResBodyType[], start:number, end:number, result: ResultType): ResultType => {
         if(start >= body.length || end >= tempEnd){
