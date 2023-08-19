@@ -1,4 +1,5 @@
 import { request } from '@umijs/max';
+import { API } from './typings';
 
 export async function queryProjectList(type: API.projectType) {
   return request<API.projectListResponse>('/project/getAll', {

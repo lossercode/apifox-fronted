@@ -13,5 +13,5 @@ export async function updateInterfaceInfo(id: number){
   return request<API.InterfaceInfo>(`/interface/updateInterfaceInfo`,{
     method: 'POST',
     data: {id: id},
-  }
+  })
 }

@@ -1,5 +1,5 @@
 import { ProColumns, ProTable } from '@ant-design/pro-components';
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { history } from 'umi';
 import s from './index.less';
 import { queryProjectList, updateProjectInfo } from '@/services/demo/ProjectsController';
@@ -31,7 +31,7 @@ const CreatedProject = () => {
       title: '操作',
       valueType: 'option',
       width: '20%',
-      render: (text, record, _, action) => [
+      render: (text, record) => [
         <a
           key="editable"
           onClick={(e)=>{
@@ -66,14 +66,16 @@ const CreatedProject = () => {
   const {setSelectedProject} = useModel('projectModel', (model) => ({
     setSelectedProject: model.setSelectedProject
   }));
+  const fetchDataSource = async () => {
+    const res = await queryProjectList(0);
+    console.log(res.data)
+    setDataSource(res.data);
+  }
   useEffect(()=>{
     fetchDataSource();
   },[]);
   const [form] = Form.useForm();
-  const fetchDataSource = async () => {
-    const res = await queryProjectList(0);
-    setDataSource(res.data);
-  }
+  
   const handleOk = () => {
     //修改信息
     form.validateFields()

@@ -2,12 +2,13 @@ import { PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Button, Form, Input, Modal,Space } from 'antd';
 import CreatedProject from './components/CreatedProject';
-import s from './index.less';
+
 
 import { createProject } from '@/services/demo/ProjectsController';
 import { useState } from 'react';
 import { history } from 'umi';
 import JoinedProject from './components/JoinedProject';
+import { API } from '@/services/demo/typings';
 
 interface collectionCreateFormProps {
   open: boolean;
@@ -108,9 +109,11 @@ const ProjectsPage: React.FC = () => {
   };
 
   const onCreate = async (values: API.createProjectParams) => {
+    console.log(values)
     //拿到这个表单的值 发送给后端
     // setConfirmLoading(true);
     const res = await createProject(values);
+    console.log(res)
     if (res.code === 200) {
       // message.success(res.msg);
       history.push(`/projects/${res.data.projectId}`);
