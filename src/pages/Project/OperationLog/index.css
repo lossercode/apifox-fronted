@@ -1,0 +1,14 @@
+.log-container {
+  padding: 0 40px;
+  display: flex;
+  flex-direction: row;
+}
+.log-container .list-container {
+  width: 20%;
+}
+.log-container .detail-container {
+  width: 80%;
+  height: 76vh;
+  margin-left: 10px;
+  border-left: solid 2px #f6f8f9;
+}

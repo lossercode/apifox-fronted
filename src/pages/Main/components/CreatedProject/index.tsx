@@ -3,11 +3,11 @@ import  { useEffect, useState } from 'react';
 import { history } from 'umi';
 import s from './index.less';
 import { queryProjectList, updateProjectInfo } from '@/services/demo/ProjectsController';
-import { Form, Input, Modal } from 'antd';
+import { Form, Input, Modal, message } from 'antd';
 import { useModel } from 'umi';
 import { DataSourceType } from '../JoinedProject';
 
-const CreatedProject = () => {
+const CreatedProject = (props) => {
   const [open, setOpen] = useState(false);
   const [initialValues, setInitialValues] = useState<DataSourceType>();
   const [dataSource, setDataSource] = useState<DataSourceType[]>([]);
@@ -63,6 +63,8 @@ const CreatedProject = () => {
       ],
     },
   ];
+  const [messageApi, contextHolder] = message.useMessage();
+  const [changed,setChanged] = useState(false); //用于重新创建项目后刷新List
   const {setSelectedProject} = useModel('projectModel', (model) => ({
     setSelectedProject: model.setSelectedProject
   }));
@@ -73,14 +75,41 @@ const CreatedProject = () => {
   }
   useEffect(()=>{
     fetchDataSource();
-  },[]);
+  },[changed]);
+  const success = () => {
+    messageApi.open({
+      type: 'success',
+      content: '修改成功',
+    });
+  };
+
+  const error = () => {
+    messageApi.open({
+      type: 'error',
+      content: 'This is an error message',
+    });
+  };
   const [form] = Form.useForm();
+<<<<<<< HEAD:src/pages/Main/components/CreatedProject/index.tsx
   
   const handleOk = () => {
     //修改信息
+=======
+  const fetchDataSource = async () => {
+    const res = await queryProjectList(0);
+    setDataSource(res.data);
+  }
+
+  const handleOk = () => {    
+>>>>>>> 670d8cfce01649ceb37de5270ab45285dfb404d1:src/pages/Projects/components/CreatedProject/index.tsx
     form.validateFields()
       .then(async(values) => {
         const res = await updateProjectInfo();
+        if(res.code === 200){
+          setOpen(false);
+          success()
+          setChanged(!changed); //改变状态，重新渲染
+        }
       })
       .catch((info) => {
         console.log('Validate Failed:', info);
@@ -93,6 +122,7 @@ const CreatedProject = () => {
   
   return (
     <div className={s.container}>
+      {contextHolder}
       <ProTable<DataSourceType>
         dataSource={dataSource}
         rowKey="id"

@@ -1,17 +1,8 @@
-.search {
-  width: 90%;
-}
 .container {
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
-.toolBarContainer {
-  display: flex;
-  flex-direction: row;
-  margin-top: 4px;
-  margin-left: 5px;
-}
-.toolBarContainer > .toolBarItem {
-  margin-right: 10px;
-  align-self: center;
+.container > span:first-of-type {
+  margin-right: 70px;
 }

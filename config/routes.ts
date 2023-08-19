@@ -17,7 +17,8 @@ const routes = [
     path: '/project/:id',
     component: './Project',
     layout: false,
-  },
+  }
+  ,
   // {
   //   path: '/projects/details',
   //   name: '接口列表',

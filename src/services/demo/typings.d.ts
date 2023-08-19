@@ -4,15 +4,19 @@
 import { BasicInfoType } from '@/models/interfaceModel';
 
 declare namespace API {
+  interface BasicResponse {
+    code : number;
+    msg : string;
+    data: Record<string, any>;
+  }
+
   interface loginParams {
     userAccount: string;
     userPassword: number;
   }
 
-  interface loginRespnse {
-    code: number;
-    data: Record<string, any>;
-    msg: string;
+  interface loginRespnse extends BasicResponse {
+
   }
 
   interface projectList {
@@ -39,6 +43,32 @@ declare namespace API {
     code: number;
     msg: string;
     data: Record<string, any>;
+  }
+  interface InterfaceInfoData{
+    method: string;
+    basicInfo: BasicInfoType;
+    reqBodyType?: string;
+    reqParams?: ReqType[];
+    reqBody?: ReqType[];
+    reqCookie?: ReqType[];
+    reqHeader?: ReqType[];
+    resInfo?: ResInfoType;
+  }
+
+  interface InterfaceInfo extends BasicResponse{
+    data: InterfaceInfoData
+  }
+
+  interface InterfaceListItem{
+    title: string;
+    key: number;
+    children?: InterfaceListItem[];
+    isLeaf?: boolean;
+  }
+
+  interface InterfaceList extends BasicResponse{
+    data : InterfaceListItem[];
+    // data: Record<string, any>;
   }
 
   interface InterfaceInfoData {

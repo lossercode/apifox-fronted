@@ -1,0 +1,19 @@
+.basic-info {
+  margin-top: 10px;
+  min-height: 1000px;
+}
+.basic-info-description {
+  padding: 20px 30px;
+}
+.card {
+  margin-bottom: 10px;
+}
+.request-para-data {
+  padding: 10px 20px;
+}
+.request-para-data .data-body {
+  margin-top: 20px;
+}
+.return-data-table {
+  padding: 10px 20px;
+}
