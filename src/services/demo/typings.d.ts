@@ -1,7 +1,7 @@
 /* eslint-disable */
 // 该文件由 OneAPI 自动生成，请勿手动修改！
 
-import { BasicInfoType } from '@/models/interfaceModel';
+import { BasicInfoType, InterfaceProps, ReqType } from '@/models/interfaceModel';
 
 declare namespace API {
   interface BasicResponse {
@@ -44,16 +44,7 @@ declare namespace API {
     msg: string;
     data: Record<string, any>;
   }
-  interface InterfaceInfoData{
-    method: string;
-    basicInfo: BasicInfoType;
-    reqBodyType?: string;
-    reqParams?: ReqType[];
-    reqBody?: ReqType[];
-    reqCookie?: ReqType[];
-    reqHeader?: ReqType[];
-    resInfo?: ResInfoType;
-  }
+
 
   interface InterfaceInfo extends BasicResponse{
     data: InterfaceInfoData
@@ -71,19 +62,10 @@ declare namespace API {
     // data: Record<string, any>;
   }
 
-  interface InterfaceInfoData {
-    method: string;
-    basicInfo: BasicInfoType;
-    reqBodyType: string;
-    reqParams: ReqType[];
-    reqBody: ReqType[];
-    reqCookie: ReqType[];
-    reqHeader: ReqType[];
-    resInfo: ResInfoType;
-  }
+  
   interface InterfaceInfo {
     code: number,
     msg: string,
-    data: InterfaceInfoData
+    data: InterfaceProps | null
   }
 }

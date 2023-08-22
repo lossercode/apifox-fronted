@@ -6,9 +6,9 @@ const OperationLog = () => {
     <div className={styles['list-container']}>
         <LogList/>
     </div>
-    <div className={styles['detail-container']}>
+    {/* <div className={styles['detail-container']}>
         <OperationDetail/>
-    </div>
+    </div> */}
 </div>)
 }
 export default OperationLog;

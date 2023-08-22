@@ -2,12 +2,8 @@ import { PlusOutlined,CloudOutlined, UploadOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Button, Form, Input, Modal,Space, Upload, message } from 'antd';
 import CreatedProject from './components/CreatedProject';
-<<<<<<< HEAD:src/pages/Main/index.tsx
 
 
-=======
-import s from './index.less';
->>>>>>> 670d8cfce01649ceb37de5270ab45285dfb404d1:src/pages/Projects/index.tsx
 import { createProject } from '@/services/demo/ProjectsController';
 import { useState } from 'react';
 import { history } from 'umi';
@@ -136,19 +132,13 @@ const ProjectsPage: React.FC = () => {
   }
 
   const onCreate = async (values: API.createProjectParams) => {
-<<<<<<< HEAD:src/pages/Main/index.tsx
-    console.log(values)
-    //拿到这个表单的值 发送给后端
-    // setConfirmLoading(true);
-=======
->>>>>>> 670d8cfce01649ceb37de5270ab45285dfb404d1:src/pages/Projects/index.tsx
     const res = await createProject(values);
     console.log(res)
     if (res.code === 200) {
       message.success(res.msg);
       history.push({
-        pathname: '/project/interface',
-        search: `?projectId=${res.data.id}&projectName=${encodeURIComponent(res.data.projectName)}`
+        pathname: `/project/${res.data._id}`,
+        // search: `?projectId=${res.data.id}&projectName=${encodeURIComponent(res.data.projectName)}`
       });
     } else {
       message.error(res.msg);

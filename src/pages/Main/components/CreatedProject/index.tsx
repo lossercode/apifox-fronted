@@ -7,7 +7,7 @@ import { Form, Input, Modal, message } from 'antd';
 import { useModel } from 'umi';
 import { DataSourceType } from '../JoinedProject';
 
-const CreatedProject = (props) => {
+const CreatedProject = () => {
   const [open, setOpen] = useState(false);
   const [initialValues, setInitialValues] = useState<DataSourceType>();
   const [dataSource, setDataSource] = useState<DataSourceType[]>([]);
@@ -50,16 +50,7 @@ const CreatedProject = (props) => {
         >
           邀请
         </a>,
-  
-        // <a
-        //   key="delete"
-        //   onClick={(e) => {
-        //     e.stopPropagation() //阻止冒泡
 
-        //   }}
-        // >
-        //   删除
-        // </a>,
       ],
     },
   ];
@@ -83,25 +74,16 @@ const CreatedProject = (props) => {
     });
   };
 
-  const error = () => {
-    messageApi.open({
-      type: 'error',
-      content: 'This is an error message',
-    });
-  };
+  // const error = () => {
+  //   messageApi.open({
+  //     type: 'error',
+  //     content: 'This is an error message',
+  //   });
+  // };
   const [form] = Form.useForm();
-<<<<<<< HEAD:src/pages/Main/components/CreatedProject/index.tsx
   
   const handleOk = () => {
     //修改信息
-=======
-  const fetchDataSource = async () => {
-    const res = await queryProjectList(0);
-    setDataSource(res.data);
-  }
-
-  const handleOk = () => {    
->>>>>>> 670d8cfce01649ceb37de5270ab45285dfb404d1:src/pages/Projects/components/CreatedProject/index.tsx
     form.validateFields()
       .then(async(values) => {
         const res = await updateProjectInfo();

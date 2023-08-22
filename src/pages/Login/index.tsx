@@ -10,6 +10,7 @@ import { message } from 'antd';
 import { history } from 'umi';
 import s from './index.less';
 import { API } from '@/services/demo/typings';
+import InterfaceEdit from '@/components/InterfaceEdit';
 const LoginPage: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const handleSubmit = async (values: API.loginParams) => {
