@@ -23,25 +23,42 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
     };
   }, [initValue]);
 
-  const fieldChange = (value: string | number, index: number, key: string) => {
-    const info = { ...resBodyProxy[index] };
-    info[key] = value;
-    setResBodyProxy([
-      ...resBodyProxy.slice(0, index),
-      info,
-      ...resBodyProxy.slice(index + 1),
-    ]);
-  };
+  // 生成下一行数据
+  const nextInfo = () => {
+    const info = {
+      id: 1,
+      type: '',
+      element: '',
+      mock: '',
+      name: '',
+      des: '',
+      indent: 0,
+      child: false,
+      // 是否能展示添加/删除按钮，当类型为数组时不运行
+      showAction: true,
+    }
+    return info;
+  }
   // 添加一行数据
   const addField = (index: number, type: string) => {
-    const current = { ...resBodyProxy[index] };
-    const newInfo = { ...resBodyProxy[index] };
+    // 如果当前为空
+    if (resBodyProxy.length === 0) {
+      const temp = nextInfo()
+      setResBodyProxy([temp]);
+      return;
+    }
 
-    newInfo.child = false;
+    const current = { ...resBodyProxy[index] };
+    const newInfo = nextInfo();
+    // 如果是通过操作栏添加
+    if(!newInfo.id){
+      newInfo.indent = 0
+    }
     newInfo.id = resBodyProxy.length + 1;
+    newInfo.indent = current.indent
     if (type === 'child') {
       current.child = true;
-      newInfo.indent += 1;
+      newInfo.indent = current.indent + 1;
       setResBodyProxy(() => [
         ...resBodyProxy.slice(0, index),
         current,
@@ -70,6 +87,33 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
       }
     }
   };
+
+  // 改变某一个字段的值
+  const fieldChange = (value: string | number, index: number, key: string) => {
+    const current = { ...resBodyProxy[index] };
+    const next = nextInfo();
+    current[key] = value;
+    // 如果是数组需要特别处理
+    if (key === 'type' && value === 'array') {
+      next.id = resBodyProxy.length + 1;
+      next.indent = current.indent + 1;
+      current.child = true;
+      current.showAction = false;
+      setResBodyProxy([
+        ...resBodyProxy.slice(0, index),
+        current,
+        next,
+        ...resBodyProxy.slice(index + 1),
+      ]);
+    } else {
+      setResBodyProxy([
+        ...resBodyProxy.slice(0, index),
+        current,
+        ...resBodyProxy.slice(index + 1),
+      ]);
+    }
+  };
+
   // 删除指定的行
   const deleteField = (index: number) => {
     const current = { ...resBodyProxy[index] };
@@ -98,18 +142,23 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
   const addContent = (index: number) => {
     return (
       <>
-        <p
-          className={styles.addContent}
-          onClick={() => addField(index, 'sibling')}
-        >
-          添加相邻节点
-        </p>
-        <p
-          className={styles.addContent}
-          onClick={() => addField(index, 'child')}
-        >
-          添加子节点
-        </p>
+        { index === 0 || (index > 0 && resBodyProxy[index-1].type !== 'array') ? (
+          <p
+            className={styles.addContent}
+            onClick={() => addField(index, 'sibling')}
+          >
+            添加相邻节点
+          </p>
+          ) : null
+        }
+        {resBodyProxy[index].type === 'object'  ? (
+          <p
+            className={styles.addContent}
+            onClick={() => addField(index, 'child')}
+          >
+            添加子节点
+          </p>
+        ) : null}
       </>
     );
   };
@@ -132,11 +181,14 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
           <span>说明</span>
         </Col>
         <Col span={2}>
-          <span>操作</span>
+          <PlusCircleOutlined
+            style={{ color: 'green', cursor: 'pointer' }}
+            onClick={() => addField(resBodyProxy.length, 'sibling')}
+          />
         </Col>
       </Row>
 
-      {resBodyProxy.map((item, index) => (
+      {resBodyProxy.map((item: ResBodyType, index:number) => (
         <Row
           key={item.id}
           style={{
@@ -158,6 +210,8 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
                   placeholder="字段名"
                   onBlur={(e) => fieldChange(e.target.value, index, 'element')}
                   style={{ padding: '4px 0' }}
+                  disabled={index > 0 && resBodyProxy[index-1].type === 'array'}
+                  defaultValue={item.element}
                 />
               </Col>
             </Row>
@@ -166,6 +220,7 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
             <Select
               onChange={(value) => fieldChange(value, index, 'type')}
               style={{ width: '90%' }}
+              defaultValue={item.type}
             >
               <Select.Option value="string">string</Select.Option>
               <Select.Option value="number">number</Select.Option>
@@ -186,6 +241,7 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
                   : false
               }
               onBlur={(e) => fieldChange(e.target.value, index, 'mock')}
+              defaultValue={item.mock}
             />
           </Col>
           <Col span={3}>
@@ -194,6 +250,7 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
               bordered={false}
               name="title"
               onBlur={(e) => fieldChange(e.target.value, index, 'name')}
+              defaultValue={item.name}
             />
           </Col>
           <Col span={3}>
@@ -202,6 +259,7 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
               bordered={false}
               name="des"
               onBlur={(e) => fieldChange(e.target.value, index, 'des')}
+              defaultValue={item.des}
             />
           </Col>
           <Col span={2} style={{ position: 'relative', paddingLeft: '10px' }}>

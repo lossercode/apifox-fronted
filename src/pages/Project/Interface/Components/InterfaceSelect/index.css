@@ -1,0 +1,8 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.container > span:first-of-type {
+  margin-right: 70px;
+}

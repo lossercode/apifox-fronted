@@ -1,9 +1,9 @@
 import { ProColumns, ProTable } from '@ant-design/pro-components';
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { history } from 'umi';
 import s from './index.less';
 import { queryProjectList, updateProjectInfo } from '@/services/demo/ProjectsController';
-import { Form, Input, Modal } from 'antd';
+import { Form, Input, Modal, message } from 'antd';
 import { useModel } from 'umi';
 import { DataSourceType } from '../JoinedProject';
 
@@ -31,7 +31,7 @@ const CreatedProject = () => {
       title: '操作',
       valueType: 'option',
       width: '20%',
-      render: (text, record, _, action) => [
+      render: (text, record) => [
         <a
           key="editable"
           onClick={(e)=>{
@@ -50,35 +50,48 @@ const CreatedProject = () => {
         >
           邀请
         </a>,
-  
-        // <a
-        //   key="delete"
-        //   onClick={(e) => {
-        //     e.stopPropagation() //阻止冒泡
 
-        //   }}
-        // >
-        //   删除
-        // </a>,
       ],
     },
   ];
+  const [messageApi, contextHolder] = message.useMessage();
+  const [changed,setChanged] = useState(false); //用于重新创建项目后刷新List
   const {setSelectedProject} = useModel('projectModel', (model) => ({
     setSelectedProject: model.setSelectedProject
   }));
-  useEffect(()=>{
-    fetchDataSource();
-  },[]);
-  const [form] = Form.useForm();
   const fetchDataSource = async () => {
     const res = await queryProjectList(0);
+    console.log(res.data)
     setDataSource(res.data);
   }
+  useEffect(()=>{
+    fetchDataSource();
+  },[changed]);
+  const success = () => {
+    messageApi.open({
+      type: 'success',
+      content: '修改成功',
+    });
+  };
+
+  // const error = () => {
+  //   messageApi.open({
+  //     type: 'error',
+  //     content: 'This is an error message',
+  //   });
+  // };
+  const [form] = Form.useForm();
+  
   const handleOk = () => {
     //修改信息
     form.validateFields()
       .then(async(values) => {
         const res = await updateProjectInfo();
+        if(res.code === 200){
+          setOpen(false);
+          success()
+          setChanged(!changed); //改变状态，重新渲染
+        }
       })
       .catch((info) => {
         console.log('Validate Failed:', info);
@@ -91,6 +104,7 @@ const CreatedProject = () => {
   
   return (
     <div className={s.container}>
+      {contextHolder}
       <ProTable<DataSourceType>
         dataSource={dataSource}
         rowKey="id"

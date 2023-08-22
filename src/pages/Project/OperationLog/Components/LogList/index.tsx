@@ -180,7 +180,6 @@ const LogList: React.FC = () => {
     const loop = (data: DataNode[]): DataNode[] =>
         data.map((item) => {
             const title = renderTitle(item.title as string, (item.content || '') as string, item.key);
-
             if (item.children) {
                 return {title, key: item.key, children: loop(item.children)};
             }

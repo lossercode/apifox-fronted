@@ -1,30 +1,16 @@
 import { PageContainer } from '@ant-design/pro-components';
+import { history } from '@umijs/max';
 import { useState } from 'react';
-import ProjectConfig from './ProjectConfig';
-import OperationLog from './OperationLog';
-import { history, useLocation } from '@umijs/max';
-import InterfaceSelect from './InterfaceSelect';
-import InterfaceShow from './InterfaceShow';
-import s from './index.less';
 import DataImport from './DataImport';
-//由于Interface列表组件比较复杂 所以单独写一个组件
-const Interface = () => {
-  return (
-    <div className={s.container}>
-      <div className={s.leftContent}>
-        <InterfaceSelect/>
-      </div>
-      <div className={s.rightContent}> 
-        <InterfaceShow/>
-      </div>
-    </div>
-  );
-}
+import OperationLog from './OperationLog';
+import ProjectConfig from './ProjectConfig';
+import Interface from './Interface';
 
-const ProjectInfo = ()=> {
+
+const ProjectInfo = () => {
   const [activeTab, setActiveTab] = useState('interface');
-  const handleTabChange = (key:string) => {
-      setActiveTab(key);
+  const handleTabChange = (key: string) => {
+    setActiveTab(key);
   };
   const tabList = [
     {
@@ -42,27 +28,27 @@ const ProjectInfo = ()=> {
     {
       tab: '项目管理',
       key: 'projectConfig',
-  }];
+    },
+  ];
   const contentList = {
     interface: <Interface />,
-    projectConfig:<ProjectConfig/>,
+    projectConfig: <ProjectConfig />,
     operationLog: <OperationLog />,
-    dataImport:<DataImport/>  
+    dataImport: <DataImport />,
   };
   // let location = useLocation();
   // const title = decodeURIComponent(location.search.split('=')[2])
   return (
     <>
-      <PageContainer        
-        title='返回主页'
+      <PageContainer
+        title="返回主页"
         onBack={() => history.back()}
         tabList={tabList}
         onTabChange={handleTabChange}
-        >
-      </PageContainer>
+      ></PageContainer>
       {contentList[activeTab]}
     </>
   );
-}
+};
 
 export default ProjectInfo;

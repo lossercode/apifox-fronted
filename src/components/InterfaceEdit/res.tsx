@@ -20,48 +20,50 @@ export const Response = () => {
     },
   ];
 
-  const { resInfo, setResInfo, resIndex, setResIndex, resBodyProxy } = useModel(
+  const { resInfo, setResInfo, resCurrentIndex, setResCurrentIndex, resBodyProxy } = useModel(
     'interfaceModel',
     (model) => model,
   );
   // 更新响应体的基本信息
   const updateInfo = (value: string, key: string) => {
-    console.log(resIndex);
-    const info = { ...resInfo[resIndex] };
+    const info = { ...resInfo[resCurrentIndex] };
     info[key] = value;
     setResInfo([
-      ...resInfo.slice(0, resIndex),
+      ...resInfo.slice(0, resCurrentIndex),
       info,
-      ...resInfo.slice(resIndex + 1),
+      ...resInfo.slice(resCurrentIndex + 1),
     ]);
   };
-
+  //添加一个响应体
   const addResInfo = () => {
-    const info = { ...resInfo[resIndex] };
+    const info = { ...resInfo[resCurrentIndex] };
+    // 把代理body的值赋值给当前选中的res
     info.body = resBodyProxy;
     setResInfo((resInfo) => [
-      ...resInfo.slice(0, resIndex),
+      ...resInfo.slice(0, resCurrentIndex),
       info,
       {
         code: 400,
         type: 'json',
         name: '失败',
-        body: [
-          {
-            id: 1,
-            type: '',
-            element: '',
-            mock: '',
-            name: '',
-            des: '',
-            indent: 0,
-            child: false,
-          },
-        ],
+        body: [],
       },
     ]);
-    setResIndex(resIndex + 1);
+    setResCurrentIndex(resCurrentIndex + 1);
   };
+  // 切换
+  const handleSwitch = (index: number) => {
+    // 把代理数组的值赋值给当前数组
+    const info = { ...resInfo[resCurrentIndex] };
+    // 把代理body的值赋值给当前选中的res
+    info.body = resBodyProxy;
+    setResInfo((resInfo) => [
+      ...resInfo.slice(0, resCurrentIndex),
+      info,
+      ...resInfo.slice(resCurrentIndex+1)
+    ]);
+    setResCurrentIndex(index);
+  }
   return (
     <>
       <h3>返回响应</h3>
@@ -71,8 +73,9 @@ export const Response = () => {
             span={3}
             key={index}
             className={`${styles['res-head']} ${
-              index === resIndex ? styles['res-head-selected'] : ''
+              index === resCurrentIndex ? styles['res-head-selected'] : ''
             }`}
+            onClick={() => handleSwitch(index)}
           >
             <span>{`${item.name} ${item.code}`}</span>
           </Col>
@@ -93,18 +96,18 @@ export const Response = () => {
         <Form.Item label="HTTP状态码" name="code">
           <Input
             onBlur={(e) => updateInfo(e.target.value, 'code')}
-            placeholder={resInfo[resIndex].code + ''}
+            placeholder={resInfo[resCurrentIndex].code + ''}
           />
         </Form.Item>
         <Form.Item label="名称" name="name">
           <Input
             onBlur={(e) => updateInfo(e.target.value, 'name')}
-            placeholder={resInfo[resIndex].name}
+            placeholder={resInfo[resCurrentIndex].name}
           />
         </Form.Item>
         <Form.Item label="内容格式">
           <Select
-            defaultValue={resInfo[resIndex]?.type}
+            defaultValue={resInfo[resCurrentIndex]?.type}
             onChange={(value) => updateInfo(value, 'type')}
           >
             {contentType.map((type) => (
@@ -115,8 +118,9 @@ export const Response = () => {
           </Select>
         </Form.Item>
       </Form>
-
-      <Body initValue={resInfo[resIndex].body} />
+      
+      {/* 如果是更新需要赋初始值，否则就为空 */}
+      <Body initValue={resInfo[resCurrentIndex].body} />
     </>
   );
 };

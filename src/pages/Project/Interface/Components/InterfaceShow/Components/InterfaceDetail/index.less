@@ -1,5 +1,7 @@
 .basic-info {
   margin-top: 10px;
+  height: 65vh;
+  overflow: auto;
 
   &-title {
     display: flex;
@@ -9,10 +11,13 @@
   &-description {
     padding: 20px 30px;
   }
-
   
-    min-height: 1000px;
 }
+
+.basic-info::-webkit-scrollbar{
+  display: none;
+}
+
 .card{
   margin-bottom: 10px;
 }

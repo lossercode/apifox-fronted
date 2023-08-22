@@ -78,7 +78,7 @@ const ArrayInput = ({
 export default function ReqForm({
   data,
   setData,
-  isBody = true,
+  isBody
 }: {
   data: readonly ReqType[];
   setData: (value: readonly ReqType[]) => void;
