@@ -9,10 +9,23 @@ import {
 } from '@ant-design/pro-components';
 import type { TabsProps } from 'antd';
 import { Button, Form, Input, Tabs, message } from 'antd';
-import { request } from 'umi';
+import { useEffect } from 'react';
+import { request, useParams } from 'umi';
 import styles from './index.less';
 
 const InterfacePage: React.FC = () => {
+  const { id } = useParams();
+  console.log('id=', id);
+  useEffect(() => {
+    request(`http://localhost:3000/project/interface?projectId=${id}`)
+      .then((response) => {
+        console.log('response=', response);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }, []);
+
   const createInterface = (values: any) => {
     console.log('values=', values);
     return new Promise((resolve) => {
@@ -56,6 +69,10 @@ const InterfacePage: React.FC = () => {
       children: <MockService />,
     },
   ];
+
+  const handleDelete = () => {
+    console.log('delete');
+  };
 
   return (
     <div className={styles['detail-container']}>
@@ -206,8 +223,13 @@ const InterfacePage: React.FC = () => {
         </div>
         <div className={styles['interface-container']}>
           <div className={styles['init-interface']}>
-            <span>初始接口1</span>
-            <CloseOutlined />
+            <span className={styles['init-interface-font']}>初始接口1</span>
+            <span
+              className={styles['init-interface-icon']}
+              onClick={handleDelete}
+            >
+              <CloseOutlined />
+            </span>
           </div>
         </div>
       </div>
