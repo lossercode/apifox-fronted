@@ -27,8 +27,8 @@ export default function InterfaceEdit({
 }) {
   const [showDelete, setShowDelete] = useState(true);
 
-  const { init, destroy } = useModel('interfaceModel', (model) => model);
-
+  const { init, destroy, reqBody, setReqBody, reqParams, setReqParams, reqCookie, setReqCookie, reqHeader, setReqHeader, reqBodyType, setReqBodyType } = useModel('interfaceModel', (model) => model);
+  const props = {reqBody, setReqBody, reqParams, setReqParams, reqCookie, setReqCookie, reqHeader, setReqHeader, reqBodyType, setReqBodyType}
   useEffect(() => {
     const mount = async () => {
       if (typeof id === 'undefined') {
@@ -59,7 +59,7 @@ export default function InterfaceEdit({
         onDelete={onDelete}
         onRun={onRun}
       />
-      <Request />
+      <Request  {...props} />
       <Response />
     </div>
   );

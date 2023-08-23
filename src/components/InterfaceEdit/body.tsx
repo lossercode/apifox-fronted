@@ -231,12 +231,11 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
           </Col>
           <Col span={3}>
             <Input
-              placeholder="mock"
+              placeholder={resBodyProxy[index].type === 'array' ? '请输入个数' : 'mock语法'}
               bordered={false}
               name="mock"
               disabled={
-                resBodyProxy[index].type === 'object' ||
-                resBodyProxy[index].type === 'array'
+                resBodyProxy[index].type === 'object' 
                   ? true
                   : false
               }

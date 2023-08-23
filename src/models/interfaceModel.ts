@@ -45,8 +45,7 @@ export interface InterfaceProps{
   name: string;
   statu: string;
   des: string;
-  // 当前接口所在的目录
-  dictionary: string;
+ 
   reqBodyType: string;
   reqBody: readonly ReqType[]
   reqParams: readonly ReqType[]
@@ -61,7 +60,6 @@ export default function useInfaModel() {
   const [name, setName] = useState<string>('');
   const [statu, setStatu] = useState<string>('open');
   const [des, setDes] = useState<string>('');
-  const [dictionary, setDictionary] = useState<string>('');
   
   // 请求参数body的类型
   const [reqBodyType, setReqBodyType] = useState<string>('form-data');
@@ -91,6 +89,7 @@ export default function useInfaModel() {
     setUrl(data.url)
     setName(data.name)
     setDes(data.des)
+    setStatu(data.statu)
     setReqBodyType(data.reqBodyType)
     setReqBody(data.reqBody)
     setReqParams(data.reqParams)
@@ -103,6 +102,7 @@ export default function useInfaModel() {
     setUrl('')
     setName('')
     setDes('')
+    setStatu('open')
     setReqBodyType('form-data')
     setReqBody([])
     setReqParams([])
@@ -129,7 +129,6 @@ export default function useInfaModel() {
       name: name,
       des: des,
       statu: statu,
-      dictionary: '根目录',
       reqBodyType: reqBodyType,
       reqBody: reqBody,
       reqParams: reqParams,
@@ -151,8 +150,6 @@ export default function useInfaModel() {
     statu,
     setStatu,
     des, 
-    dictionary,
-    setDictionary,
     setDes,
     reqParams,
     setReqParams,

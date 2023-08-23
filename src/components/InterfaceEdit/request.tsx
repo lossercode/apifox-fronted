@@ -1,19 +1,30 @@
 import { Segmented, Tabs, TabsProps } from 'antd';
-import { useModel } from 'umi';
 import ReqForm from './reqForm';
-export default function Request() {
-  const {
-    reqParams,
-    setReqParams,
-    reqCookie,
-    setReqCookie,
-    reqHeader,
-    setReqHeader,
-    reqBodyType,
-    setReqBodyType,
-    reqBody,
-    setReqBody
-  } = useModel('interfaceModel', (model) => model);
+import { ReqType } from '@/models/interfaceModel';
+import { Dispatch, SetStateAction } from 'react';
+export default function Request({reqParams,
+  setReqParams,
+  reqCookie,
+  setReqCookie,
+  reqHeader,
+  setReqHeader,
+  reqBodyType,
+  setReqBodyType,
+  reqBody,
+  setReqBody}: {
+    reqCookie: readonly ReqType[],
+    reqParams: readonly ReqType[],
+    reqHeader: readonly ReqType[],
+    reqBody: readonly ReqType[],
+    reqBodyType: string,
+    setReqBodyType: Dispatch<SetStateAction<string>>,
+    setReqParams: Dispatch<SetStateAction<readonly ReqType[]>>,
+    setReqBody: Dispatch<SetStateAction<readonly ReqType[]>>,
+    setReqHeader: Dispatch<SetStateAction<readonly ReqType[]>>,
+    setReqCookie: Dispatch<SetStateAction<readonly ReqType[]>>,
+
+  }) {
+  
   const reqItems: TabsProps['items'] = [
     {
       key: '1',

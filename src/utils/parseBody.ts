@@ -67,7 +67,8 @@ const parseBodyToJson = (body: ResBodyType[]) => {
             return parse(body, start+len+1, end+len+1, result)
         }
     }
-    return parse(body, 0, 0, {})
+    const result = parse(body, 0, 0, {})
+    return JSON.stringify(result, null, 4)
 }
 
 

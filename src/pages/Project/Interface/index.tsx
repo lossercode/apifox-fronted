@@ -1,4 +1,4 @@
-import { useModel, useParams } from '@umijs/max';
+import { useModel} from '@umijs/max';
 import { Tabs } from 'antd';
 import { useEffect } from 'react';
 import InterfaceSelect from './Components/InterfaceSelect';
@@ -12,11 +12,12 @@ const Interface = () => {
     'interfaceShowModel',
     (model) => model,
   );
-  const params = useParams();
+
+  const { needFlush } = useModel('interfaceShowModel', (model) => model);
 
   // 初始时默认选中落地页
   useEffect(() => {
-    setTabItems([{ key: '1', label: '新建...', children: <Landing /> }]);
+    setTabItems([{ key: '1', label: '引导页', children: <Landing /> }]);
     setActiveTab(`1`);
 
     return () => {
@@ -24,6 +25,11 @@ const Interface = () => {
       setActiveTab('');
     };
   }, []);
+  const add = () => {
+    const newActiveKey = `${tabItems.length + 1}`;
+    setTabItems([...tabItems, { label: '引导页', children: <Landing /> , key: newActiveKey }]);
+    setActiveTab(newActiveKey);
+  };
   const remove = (targetKey: TargetKey) => {
     let newActiveKey = activeTab;
     let lastIndex = -1;
@@ -49,12 +55,14 @@ const Interface = () => {
   ) => {
     if (action === 'remove') {
       remove(targetKey);
+    } else {
+      add()
     }
   };
   return (
     <div className={styles.container}>
       <div className={styles.leftContent}>
-        <InterfaceSelect id={params.id as string} />
+        <InterfaceSelect  needFlush={needFlush}/>
       </div>
       <div className={styles.rightContent}>
         <Tabs

@@ -2,7 +2,7 @@
  * @Author: lossercoder
  * @Date: 2023-08-21 15:21:14
  * @LastEditors: lossercode 
- * @LastEditTime: 2023-08-21 15:50:33
+ * @LastEditTime: 2023-08-22 22:20:44
  * @Description: 接口页面需要用到的共享状态
  */
 
@@ -21,14 +21,24 @@ export default function useInfaModel() {
     const [activeTab, setActiveTab] = useState<string>('')
 
     // 当前选中的接口的id
-    const [currentInterface, setCurrentInterface] = useState<string>('')
+    const [currentInterfaceId, setCurrentInterfaceId] = useState<string>('')
+
+    // 当前选中的接口名称
+    const [directory, setDirectory] = useState<string>('')
+
+    // 文件夹是否需要刷新，当新增接口时点了保存文件夹需要刷新
+    const [needFlush, setNeedFlush] = useState<boolean>(false)
 
     return {
         tabItems,
         setTabItems,
         activeTab,
         setActiveTab,
-        currentInterface,
-        setCurrentInterface
+        currentInterfaceId,
+        setCurrentInterfaceId,
+        directory,
+        setDirectory,
+        needFlush,
+        setNeedFlush
     }
 }

@@ -17,13 +17,14 @@ export async function updateInterfaceInfo(id: string, data: InterfaceProps){
   });
 }
 
-// 添加接口: 项目的id, 接口信息
-export async function addInterface(id: string, data: InterfaceProps){
+// 添加接口: 项目的id, 接口信息, 目录的id
+export async function addInterface(id: string, data: InterfaceProps, fileId: string) {
   return request<API.InterfaceInfo>(`/interface/create`, {
     method: 'POST',
     data: {
       projectId: id,
-      data: data
+      data: data,
+      directory: fileId
     }
   })
 }
@@ -39,10 +40,10 @@ export async function getAllInterface(id: string) {
   });
 }
 
-export async function interfaceAddFiles(name:string){
+export async function interfaceAddFiles(name:string, id:string){
     return request(`/interface/interfaceFilesAdd`, {
         method: 'POST',
-        data: {name: name},
+        data: {name: name, projectId: id},
     });
 }
 

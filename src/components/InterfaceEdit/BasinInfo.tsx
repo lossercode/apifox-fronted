@@ -2,6 +2,7 @@ import { useModel } from '@umijs/max';
 import { Button, Col, Form, Input, Row, Select } from 'antd';
 import styles from './index.less';
 import { InterfaceProps } from '@/models/interfaceModel';
+import { useEffect } from 'react';
 
 export default function BasicInfo({
   showDelete,
@@ -41,6 +42,13 @@ export default function BasicInfo({
     const data = getValue()
     onSave(data)
   };
+
+  useEffect(() => {
+    console.log(url)
+    console.log(name )
+    console.log(des )
+
+  }, [])
   return (
     <>
       <Form>
@@ -61,9 +69,8 @@ export default function BasicInfo({
                     ))}
                   </Select>
                 }
-                defaultValue={url}
                 onBlur={(e) => setUrl(e.target.value)}
-                placeholder="请输入url地址，以/开头"
+                placeholder={url}
               />
             </Form.Item>
           </Col>
@@ -88,7 +95,7 @@ export default function BasicInfo({
           <Col span={8}>
             <Form.Item label="接口名称">
               <Input
-                defaultValue={name}
+                placeholder={name}
                 onBlur={(e) => setName(e.target.value)}
               />
             </Form.Item>
@@ -107,7 +114,7 @@ export default function BasicInfo({
         <Form.Item label="接口描述">
           <Input.TextArea
             onBlur={(e) => setDes(e.target.value)}
-            defaultValue={des}
+            placeholder={des}
           />
         </Form.Item>
       </Form>

@@ -3,19 +3,25 @@ import { Badge, Card, Descriptions, Table, Tag, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styles from './index.less';
 import type { ColumnsType } from 'antd/es/table';
-import { InterfaceProps, ReqType } from '@/models/interfaceModel';
+import { InterfaceProps, ReqType, ResBodyType } from '@/models/interfaceModel';
+import { parseBodyToJson } from '@/utils/parseBody';
+import { Body } from '@/components/InterfaceEdit/body';
 
 // 接口的id
 export const InterfaceDetail = ({id}: {id: string}) => {
   
   // 注意不能用数据流中的数据, 避免状态混乱
   const [data, setData] = useState<InterfaceProps | null>(null)
+  const [body, setBody] = useState<ResBodyType[]>([])
   // 
   useEffect(() => {
     const init = async () => {
       const result = await getInterfaceInfo(id);
       if(result.code === 200){
         const interfaceInfo = result.data;
+        // 解析body
+        const body = result.data.resInfo[0].body
+        setBody(body)
         setData(interfaceInfo)
       }else{
         message.error(result.msg)
@@ -35,12 +41,12 @@ export const InterfaceDetail = ({id}: {id: string}) => {
       dataIndex: 'type',
       key: 'type',
     },
-    {
-      title: '示例值',
-      dataIndex: 'mock',
-      key: 'mock',
-      render: (value) => value.map((item: {id: number, label: string}) => <Tag key={item.id}>{item.label}</Tag> )
-    },
+    // {
+    //   title: '示例值',
+    //   dataIndex: 'mock',
+    //   key: 'mock',
+    //   render: (value) => value.map((item: {id: number, label: string}) => <Tag key={item.id}>{item.label}</Tag> )
+    // },
     {
       title: '描述',
       dataIndex: 'des',
@@ -67,6 +73,9 @@ export const InterfaceDetail = ({id}: {id: string}) => {
           <Descriptions.Item label="接口路径">
             {data?.url}
           </Descriptions.Item>
+          <Descriptions.Item label="接口描述">
+            {data?.des}
+          </Descriptions.Item>
         </Descriptions>
       </Card>
 
@@ -74,7 +83,7 @@ export const InterfaceDetail = ({id}: {id: string}) => {
         <Descriptions title="请求参数" style={{ marginBottom: 0 }}>
         </Descriptions>
         {
-          data?.reqBody? (
+          data?.reqBody.length ? (
             <>
               <h4>Body</h4>
               <Table columns={columns} dataSource={data.reqBody}/>
@@ -82,7 +91,7 @@ export const InterfaceDetail = ({id}: {id: string}) => {
           ) : null
         }
         {
-          data?.reqHeader? (
+          data?.reqHeader.length ? (
             <>
               <h4>Header</h4>
               <Table columns={columns} dataSource={data.reqHeader}/>
@@ -90,7 +99,7 @@ export const InterfaceDetail = ({id}: {id: string}) => {
           ) : null
         }
         {
-        data?.reqParams ? (
+        data?.reqParams.length ? (
             <>
               <h4>Params</h4>
               <Table columns={columns} dataSource={data.reqParams}/>
@@ -98,7 +107,7 @@ export const InterfaceDetail = ({id}: {id: string}) => {
           ) : null
         }
         {
-          data?.reqCookie? (
+          data?.reqCookie.length ?  (
             <>
               <h4>Cookie</h4>
               <Table columns={columns} dataSource={data.reqCookie}/>
@@ -110,7 +119,7 @@ export const InterfaceDetail = ({id}: {id: string}) => {
       <Card bordered={false} className={styles.card}>
         <Descriptions title="返回响应" style={{ marginBottom: 32 }}>
         </Descriptions>
-        <Table></Table>
+        <Body initValue={body}/>
       </Card>
     </div>
   );
