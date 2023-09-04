@@ -20,23 +20,11 @@ const waitTime = (time: number = 100) => {
 };
 
 type ExpectationType = {
-  id: React.Key;
+  id: string;
   title?: string;
-  address?: string;
   creator?: string;
   edited_at?: string;
-  children?: ExpectationType[];
 };
-
-const defaultData: ExpectationType[] = [
-  {
-    id: 624748504,
-    title: '添加用户admin',
-    address: 'https://pines.ca/mock/100/admin/add',
-    creator: '张三',
-    edited_at: '1590486176000',
-  },
-];
 
 const columns: ProColumns<DataSourceType>[] = [
   {
@@ -53,9 +41,10 @@ const columns: ProColumns<DataSourceType>[] = [
 
 const MockService: React.FC = () => {
   const [modalVisit, setModalVisit] = useState(false);
-  const [form] = Form.useForm<{ name: string; company: string }>();
+  // 期望列表数据
+  const [expectData, setExpectData] = useState<ExpectationType[]>([]);
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>(() =>
-    defaultData.map((item) => item.id),
+    expectData.map((item) => item.id),
   );
   const formRef = useRef<ProFormInstance<any>>();
   const editorFormRef = useRef<EditableFormInstance<ExpectationType>>();
@@ -132,7 +121,6 @@ const MockService: React.FC = () => {
             添加期望
           </Button>
         }
-        form={form}
         autoFocusFirstInput
         modalProps={{
           destroyOnClose: true,
@@ -168,7 +156,7 @@ const MockService: React.FC = () => {
           className={styles['response-table']}
           label="期望参数"
           name="dataSource"
-          initialValue={defaultData}
+          initialValue={expectData}
           trigger="onValuesChange"
         >
           <EditableProTable<DataSourceType>
@@ -294,7 +282,7 @@ const MockService: React.FC = () => {
         }}
         formRef={formRef}
         initialValues={{
-          table: defaultData,
+          table: expectData,
         }}
         validateTrigger="onBlur"
       >

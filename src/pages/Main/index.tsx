@@ -135,9 +135,11 @@ const ProjectsPage: React.FC = () => {
     const res = await createProject(values);
     console.log(res)
     if (res.code === 200) {
+      console.log('新建项目成功')
+      console.log('项目的数据为', res.data)
       message.success(res.msg);
       history.push({
-        pathname: `/project/${res.data._id}`,
+        pathname: `/project/${res.data.id}`,
         // search: `?projectId=${res.data.id}&projectName=${encodeURIComponent(res.data.projectName)}`
       });
     } else {

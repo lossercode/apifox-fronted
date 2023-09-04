@@ -111,7 +111,7 @@ export default function ReqForm({
       valueEnum: valueEnum(isBody),
     },
     {
-      title: '示例值',
+      title: '值',
       dataIndex: 'mock',
       renderFormItem: (_, { record }) =>
         record?.type === 'array' ? (

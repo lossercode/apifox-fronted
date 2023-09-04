@@ -1,4 +1,4 @@
-import { useModel} from '@umijs/max';
+import { useModel, useParams} from '@umijs/max';
 import { Tabs } from 'antd';
 import { useEffect } from 'react';
 import InterfaceSelect from './Components/InterfaceSelect';
@@ -8,12 +8,11 @@ import { TabsProps } from '@/models/interfaceShowModel';
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
 
 const Interface = () => {
-  const { tabItems, setTabItems, activeTab, setActiveTab } = useModel(
+  const { tabItems, setTabItems, activeTab, setActiveTab, needFlush } = useModel(
     'interfaceShowModel',
     (model) => model,
   );
-
-  const { needFlush } = useModel('interfaceShowModel', (model) => model);
+  
 
   // 初始时默认选中落地页
   useEffect(() => {
@@ -62,7 +61,7 @@ const Interface = () => {
   return (
     <div className={styles.container}>
       <div className={styles.leftContent}>
-        <InterfaceSelect  needFlush={needFlush}/>
+        <InterfaceSelect  needFlush={needFlush} />
       </div>
       <div className={styles.rightContent}>
         <Tabs

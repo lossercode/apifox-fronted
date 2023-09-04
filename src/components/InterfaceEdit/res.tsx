@@ -2,9 +2,11 @@
 import { ResInfo } from '@/models/interfaceModel';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, Row, Select } from 'antd';
-import { useModel } from 'umi';
 import { Body } from './body';
 import styles from './index.less';
+import { useContext } from 'react';
+import Context from './context';
+import deepCopy from '@/utils/deepCopy';
 
 export const Response = () => {
   const contentType = [
@@ -20,10 +22,8 @@ export const Response = () => {
     },
   ];
 
-  const { resInfo, setResInfo, resCurrentIndex, setResCurrentIndex, resBodyProxy } = useModel(
-    'interfaceModel',
-    (model) => model,
-  );
+  const { resInfo, setResInfo, resCurrentIndex, setResCurrentIndex, resBodyProxy, setResBodyProxy } = useContext(Context)
+  
   // 更新响应体的基本信息
   const updateInfo = (value: string, key: string) => {
     const info = { ...resInfo[resCurrentIndex] };
@@ -50,19 +50,25 @@ export const Response = () => {
       },
     ]);
     setResCurrentIndex(resCurrentIndex + 1);
+    // 新建的时候body为空
+    setResBodyProxy([])
   };
   // 切换
   const handleSwitch = (index: number) => {
+    
+    if(index === resCurrentIndex){
+      return
+    }
+
+    const prevData = deepCopy(resInfo);
+    // 切换的时候更新代理body的值为要切换的位置的值
     // 把代理数组的值赋值给当前数组
-    const info = { ...resInfo[resCurrentIndex] };
-    // 把代理body的值赋值给当前选中的res
-    info.body = resBodyProxy;
-    setResInfo((resInfo) => [
-      ...resInfo.slice(0, resCurrentIndex),
-      info,
-      ...resInfo.slice(resCurrentIndex+1)
-    ]);
+    prevData[resCurrentIndex].body = resBodyProxy 
+    console.log('prevdata',prevData)
+    setResInfo(prevData);
+    setResBodyProxy(prevData[index].body)
     setResCurrentIndex(index);
+
   }
   return (
     <>
@@ -120,7 +126,7 @@ export const Response = () => {
       </Form>
       
       {/* 如果是更新需要赋初始值，否则就为空 */}
-      <Body initValue={resInfo[resCurrentIndex].body} />
+      <Body value={resBodyProxy} setValue={setResBodyProxy}/>
     </>
   );
 };

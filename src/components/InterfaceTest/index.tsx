@@ -1,20 +1,30 @@
 import { ReqType } from '@/models/interfaceModel';
-import {
-  getInterfaceInfo,
-  getInterfaceResult,
-} from '@/services/demo/interfaceController';
+import { getInterfaceInfo, getInterfaceResult } from '@/services/demo/interfaceController';
 
 import { Button, Col, Input, Row, Tabs, message } from 'antd';
 import { useEffect, useState } from 'react';
 import AceEditor from 'react-ace';
-import style from './index.less';
 import Request from '../InterfaceEdit/request';
+import style from './index.less';
+// params是数组的时候
+import { stringify } from 'qs'
 
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-monokai';
 
+
+type Req = {
+  [key: string]: string;
+};
+
 // 一个独立的测试页面
-export default function InterfaceTest({ id }: { id?: string }) {
+export default function InterfaceTest({
+  id,
+  needFlush,
+}: {
+  id?: string;
+  needFlush: boolean;
+}) {
   const [body, setBody] = useState<string>('');
 
   const [url, setUrl] = useState<string>('');
@@ -39,7 +49,6 @@ export default function InterfaceTest({ id }: { id?: string }) {
     setReqBodyType,
   };
 
-  // 根据id进行请求
   useEffect(() => {
     const init = async () => {
       // 传id表示要测试指定的接口，不传可以测试任意接口
@@ -47,29 +56,83 @@ export default function InterfaceTest({ id }: { id?: string }) {
         const result = await getInterfaceInfo(id);
         if (result.code === 200) {
           const data = result.data;
-          setMethod(data.method)
-          setUrl(data.url)
-          setReqBody(data.reqBody)
-          setReqParams(data.reqParams)
-          setReqHeader(data.reqHeader)
-          setReqCookie(data.reqCookie)
-          setReqBodyType(data.reqBodyType)
+          setMethod(data.method);
+          setUrl(data.url);
+          setReqBody(data.reqBody);
+          setReqParams(data.reqParams);
+          setReqHeader(data.reqHeader);
+          setReqCookie(data.reqCookie);
+          setReqBodyType(data.reqBodyType);
         } else {
           message.error(result.msg);
         }
       }
     };
     init();
-  }, [id]);
-  const test = async () => {
-    if (typeof id !== 'undefined') {
-      const result = await getInterfaceResult(id);
-      if (result.code !== 200) {
-        message.error(result.msg);
-      } else {
-        // 第三个参数控制缩进量，不写的话 ace-editor无法换行
-        setBody(JSON.stringify(result.data, null, 4));
+  }, [needFlush]);
+
+  // 解析cookie
+  const parseRequest = (request: readonly ReqType[]) => {
+    if (!request || request.length === 0) {
+      return null;
+    }
+    const result: {
+      [key: string]: string | [];
+    } = {};
+    for (let i = 0; i < request.length; i++) {
+      const item = request[i];
+      if (!item.name || !item.mock || !item.type) {
+        continue;
       }
+      // 如果类型是数组
+      let value: any = [];
+      switch (item.type) {
+        case 'array':
+          item.mock.map((mock) => value.push(mock.label));
+          break;
+        case 'integer':
+          value = parseInt(item.mock as string);
+          break;
+        case 'number':
+          value = parseFloat(item.mock as string);
+          break;
+        default:
+          value = item.mock;
+      }
+      result[item.name] = value;
+    }
+    return result
+  };
+
+  const test = async () => {
+    const cookie = parseRequest(reqCookie)
+    document.cookie = cookie
+    const params = parseRequest(reqParams)
+    const body = parseRequest(reqBody)
+    const header = parseRequest(reqHeader)
+    if (typeof id !== 'undefined') {
+      const result = await getInterfaceResult(id, {
+        method: method,
+        params: {
+          ...params,
+        },
+        paramsSerializer: function (params:any) {
+          return stringify(params, {indices: false})
+        },
+        data: {
+          ...body,
+        },
+        headers: {
+          ...header,
+        },
+      });
+      // if (result.code !== 200) {
+      //   message.error(result.msg);
+      // } else {
+      //   // 第三个参数控制缩进量，不写的话 ace-editor无法换行
+      //   setBody(JSON.stringify(result.data, null, 4));
+      // }
+      console.log(result)
     }
   };
   const items = [
@@ -89,7 +152,7 @@ export default function InterfaceTest({ id }: { id?: string }) {
             showLineNumbers: true,
             wrap: true,
             tabSize: 4,
-            useWorker: false
+            useWorker: false,
           }}
         />
       ),
@@ -106,9 +169,7 @@ export default function InterfaceTest({ id }: { id?: string }) {
         <Col span={17}>
           <Input
             addonBefore={method || 'GET'}
-            value={
-              `http://127.0.0.1:3000/mock${url}` 
-            }
+            value={`http://127.0.0.1:3000/mock${url}`}
           />
         </Col>
         <Col span={4} offset={2}>
@@ -117,7 +178,7 @@ export default function InterfaceTest({ id }: { id?: string }) {
           </Button>
         </Col>
       </Row>
-      <Row style={{marginTop: '20px'}}>
+      <Row style={{ marginTop: '20px' }}>
         <Request {...props} />
       </Row>
       <Tabs defaultActiveKey="1" items={items} style={{ marginTop: '20px' }} />

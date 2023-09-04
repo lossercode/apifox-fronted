@@ -7,7 +7,7 @@ export type ReqType = {
   name?: string;
   type?: string;
   des?: string;
-  mock?: { id: number; label: string }[];
+  mock?: { id: number; label: string }[] | string;
 };
 
 // 响应体表格的参数

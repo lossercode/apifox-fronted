@@ -2,7 +2,7 @@
  * @Author: lossercoder
  * @Date: 2023-08-21 15:21:14
  * @LastEditors: lossercode 
- * @LastEditTime: 2023-08-22 22:20:44
+ * @LastEditTime: 2023-08-24 16:09:23
  * @Description: 接口页面需要用到的共享状态
  */
 
@@ -23,10 +23,13 @@ export default function useInfaModel() {
     // 当前选中的接口的id
     const [currentInterfaceId, setCurrentInterfaceId] = useState<string>('')
 
-    // 当前选中的接口名称
+    // 当前选中的接口id
     const [directory, setDirectory] = useState<string>('')
 
-    // 文件夹是否需要刷新，当新增接口时点了保存文件夹需要刷新
+    // 文件夹是否需要刷新，
+    // 当新增接口时点了保存文件夹需要刷新,
+    // 当接口更新时需要刷新
+    // 很多地方都需要用
     const [needFlush, setNeedFlush] = useState<boolean>(false)
 
     return {

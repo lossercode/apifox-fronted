@@ -4,11 +4,10 @@ import React, { useEffect, useState } from 'react';
 import styles from './index.less';
 import type { ColumnsType } from 'antd/es/table';
 import { InterfaceProps, ReqType, ResBodyType } from '@/models/interfaceModel';
-import { parseBodyToJson } from '@/utils/parseBody';
 import { Body } from '@/components/InterfaceEdit/body';
 
 // 接口的id
-export const InterfaceDetail = ({id}: {id: string}) => {
+export const InterfaceDetail = ({id, needFlush}: {id: string, needFlush: boolean}) => {
   
   // 注意不能用数据流中的数据, 避免状态混乱
   const [data, setData] = useState<InterfaceProps | null>(null)
@@ -28,7 +27,7 @@ export const InterfaceDetail = ({id}: {id: string}) => {
       }
     };
     init();
-  }, [id]);
+  }, [needFlush]);
 
   const columns: ColumnsType<ReqType> = [
     {
@@ -86,7 +85,7 @@ export const InterfaceDetail = ({id}: {id: string}) => {
           data?.reqBody.length ? (
             <>
               <h4>Body</h4>
-              <Table columns={columns} dataSource={data.reqBody}/>
+              <Table columns={columns} dataSource={data.reqBody} rowKey='id'/>
             </>
           ) : null
         }
@@ -119,7 +118,7 @@ export const InterfaceDetail = ({id}: {id: string}) => {
       <Card bordered={false} className={styles.card}>
         <Descriptions title="返回响应" style={{ marginBottom: 32 }}>
         </Descriptions>
-        <Body initValue={body}/>
+        <Body value={body}/>
       </Card>
     </div>
   );

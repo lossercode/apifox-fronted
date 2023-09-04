@@ -3,28 +3,27 @@ import { API } from './typings';
 import { InterfaceProps } from '@/models/interfaceModel';
 
 // 获取接口详细信息
-export async function getInterfaceInfo(id: string) {
+export async function getInterfaceInfo(id: string){
   return request<API.InterfaceInfo>(`/interface/getInterfaceInfo?interfaceId=${id}`, {
     method: 'GET',
   });
 }
 
 // 修改接口
-export async function updateInterfaceInfo(id: string, data: InterfaceProps){
-  return request<API.InterfaceInfo>(`/interface/updateInterfaceInfo`,{
+export async function updateInterfaceInfo(id: string, data: InterfaceProps, projectId: string) {
+  return request<API.InterfaceInfo>(`/interface/update`,{
     method: 'POST',
-    info: {interfaceId: id, data: data},
+    data: {interfaceId: id, data: data, projectId: projectId},
   });
 }
 
 // 添加接口: 项目的id, 接口信息, 目录的id
-export async function addInterface(id: string, data: InterfaceProps, fileId: string) {
+export async function addInterface(id: string, data: InterfaceProps) {
   return request<API.InterfaceInfo>(`/interface/create`, {
     method: 'POST',
     data: {
       projectId: id,
       data: data,
-      directory: fileId
     }
   })
 }
@@ -59,11 +58,8 @@ export async function reqDeleteTreeNode(name:string,key: number){
     });
 }
 
-export async function getInterfaceResult(interfaceId: string){
-  return request(`/interface/getInterfaceResult`, {
-    method: 'POST',
-    data: {
-      interfaceId: interfaceId,
-    }
+export async function getInterfaceResult(id: string, options: any){
+  return request(`/mock/${id}`, {
+    ...options
   })
 }

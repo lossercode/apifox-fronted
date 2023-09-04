@@ -1,0 +1,6 @@
+.container {
+    min-height: 1000px;
+    .header {
+        margin: 10px 0;
+    }
+}

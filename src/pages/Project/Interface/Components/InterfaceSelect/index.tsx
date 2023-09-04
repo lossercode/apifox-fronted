@@ -49,27 +49,23 @@ const InterfaceSelect = ({ needFlush }: { needFlush: boolean }) => {
     setTabItems,
     tabItems,
     setActiveTab,
-    setNeedFlush,
+    setDirectory,
   } = useModel('interfaceShowModel', (model) => model);
 
   const getTreeNode = async () => {
+    console.log(params.id)
     const result = await getAllInterface(params.id as string);
+    console.log('文件数据为', result.data)
     if (result.code === 200) {
       setTreeData(result.data);
     } else {
       message.error('获取文件夹失败，请重试');
     }
   };
-  useEffect(() => {
-    getTreeNode();
-  }, []);
+
 
   useEffect(() => {
-    if (!needFlush) {
-      return;
-    } else {
-      getTreeNode();
-    }
+    getTreeNode()
   }, [needFlush]);
 
   const addFiles = () => {
@@ -80,19 +76,10 @@ const InterfaceSelect = ({ needFlush }: { needFlush: boolean }) => {
     setIsModalVisible(false);
   };
   const handleOk = () => {
+    // 添加文件夹时直接展示在前端，不放入后端
     form.validateFields().then(async (values) => {
-      const res = await interfaceAddFiles(
-        values.filesName,
-        params.id as string,
-      );
-      if (res.code === 200) {
-        message.success('文件夹添加成功');
-        console.log(res.data);
-        setIsModalVisible(false);
-        getTreeNode();
-      } else {
-        message.error('文件夹添加失败，请重试');
-      }
+      setTreeData([...treeData || [], {title: values.filesName, key: values.filesName, children: []}])
+      setIsModalVisible(false)
     });
   };
 
@@ -115,59 +102,16 @@ const InterfaceSelect = ({ needFlush }: { needFlush: boolean }) => {
     }
   };
 
-  // 创建新接口返回的接口_id
-  const [id, setId] = useState<string>('');
-  // 创建新接口后返回的接口名称，因为要更新tabs标题
-  const [name, setName] = useState<string>('');
-  // 点击的文件的id
-  const [fileId, setFileId] = useState<string>('');
-  // 点击运行按钮时的操作
-  const run = () => {
-    if (!id) {
-      message.error('请先保存');
-      return;
-    }
-    // 跳到接口测试页面
-    setTabItems([
-      ...tabItems,
-      {
-        key: `${tabItems.length + 1}`,
-        label: name,
-        children: <InterfaceTest id={id} />,
-      },
-    ]);
-  };
-  // 未命名接口点击保存时提交到后台
-  const save = async (value: InterfaceProps) => {
-    const res = await addInterface(params.id as string, value, fileId);
-    if (res.code !== 200) {
-      message.error(res.msg);
-    } else {
-      setId(res.data._id);
-      // 刷新文件目录
-      setNeedFlush(true);
-      setName(res.data.name);
-      // 刷新当前接口
-      setTabItems([
-        ...tabItems.slice(0, tabItems.length - 1),
-        {
-          key: `${tabItems.length + 1}`,
-          label: res.data.name,
-          children: <InterfaceEdit id={res.data._id} onSave={save} onRun={run} />,
-        },
-      ]);
-      message.success(res.msg);
-    }
-  };
+  
   // 点击新建接口按钮
   const newInterface = (node: any) => {
-    setFileId(node.key);
+    setDirectory(node.key);
     setTabItems([
       ...tabItems,
       {
         key: `${tabItems.length + 1}`,
         label: '未命名接口',
-        children: <InterfaceEdit onSave={save} onRun={run} />,
+        children: <InterfaceEdit />,
       },
     ]);
     setActiveTab(`${tabItems.length + 1}`);

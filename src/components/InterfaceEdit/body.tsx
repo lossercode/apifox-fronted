@@ -1,27 +1,21 @@
-import { ResBodyType } from '@/models/interfaceModel';
+import { ResBodyType } from './types';
 import {
   CaretDownOutlined,
   MinusCircleOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons';
 import { Col, Input, Popover, Row, Select } from 'antd';
-import { useEffect } from 'react';
-import { useModel } from 'umi';
 import styles from './index.less';
+import { useEffect } from 'react';
 
-export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
-  const { resBodyProxy, setResBodyProxy } = useModel(
-    'interfaceModel',
-    (model) => model,
-  );
-
+export const Body = ({ value, setValue }: { value: ResBodyType[] , setValue?: (value: ResBodyType[]) => void}) => {
   useEffect(() => {
-    setResBodyProxy(initValue);
-    // 组件销毁的时候清空
     return () => {
-      setResBodyProxy([]);
+      if(setValue){
+        setValue([])
+      }
     };
-  }, [initValue]);
+  }, []);
 
   // 生成下一行数据
   const nextInfo = () => {
@@ -41,100 +35,109 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
   }
   // 添加一行数据
   const addField = (index: number, type: string) => {
+    if(!setValue){
+      return
+    }
     // 如果当前为空
-    if (resBodyProxy.length === 0) {
+    if (value.length === 0) {
       const temp = nextInfo()
-      setResBodyProxy([temp]);
+      setValue([temp]);
       return;
     }
 
-    const current = { ...resBodyProxy[index] };
+    const current = { ...value[index] };
     const newInfo = nextInfo();
     // 如果是通过操作栏添加
     if(!newInfo.id){
       newInfo.indent = 0
     }
-    newInfo.id = resBodyProxy.length + 1;
+    newInfo.id = value.length + 1;
     newInfo.indent = current.indent
     if (type === 'child') {
       current.child = true;
       newInfo.indent = current.indent + 1;
-      setResBodyProxy(() => [
-        ...resBodyProxy.slice(0, index),
+      setValue([
+        ...value.slice(0, index),
         current,
         newInfo,
-        ...resBodyProxy.slice(index + 1),
+        ...value.slice(index + 1),
       ]);
     } else {
       // 找到和当前元素平级的元素
       let i = index + 1;
-      while (i < resBodyProxy.length) {
-        if (resBodyProxy[i].indent > current.indent) {
+      while (i < value.length) {
+        if (value[i].indent > current.indent) {
           i++;
         } else {
           break;
         }
       }
-      if (i < resBodyProxy.length) {
+      if (i < value.length) {
         // 在中间插入数据
-        setResBodyProxy([
-          ...resBodyProxy.slice(0, i),
+        setValue([
+          ...value.slice(0, i),
           newInfo,
-          ...resBodyProxy.slice(i),
+          ...value.slice(i),
         ]);
       } else {
-        setResBodyProxy([...resBodyProxy, newInfo]);
+        setValue([...value, newInfo]);
       }
     }
   };
 
   // 改变某一个字段的值
-  const fieldChange = (value: string | number, index: number, key: string) => {
-    const current = { ...resBodyProxy[index] };
+  const fieldChange = (newValue: string | number, index: number, key: string) => {
+    if(!setValue){
+      return
+    }
+    const current = { ...value[index] };
     const next = nextInfo();
-    current[key] = value;
+    current[key] = newValue;
     // 如果是数组需要特别处理
-    if (key === 'type' && value === 'array') {
-      next.id = resBodyProxy.length + 1;
+    if (key === 'type' && newValue === 'array') {
+      next.id = value.length + 1;
       next.indent = current.indent + 1;
       current.child = true;
       current.showAction = false;
-      setResBodyProxy([
-        ...resBodyProxy.slice(0, index),
+      setValue([
+        ...value.slice(0, index),
         current,
         next,
-        ...resBodyProxy.slice(index + 1),
+        ...value.slice(index + 1),
       ]);
     } else {
-      setResBodyProxy([
-        ...resBodyProxy.slice(0, index),
+      setValue([
+        ...value.slice(0, index),
         current,
-        ...resBodyProxy.slice(index + 1),
+        ...value.slice(index + 1),
       ]);
     }
   };
 
   // 删除指定的行
   const deleteField = (index: number) => {
-    const current = { ...resBodyProxy[index] };
+    if(!setValue){
+      return
+    }
+    const current = { ...value[index] };
     if (!current.child) {
-      setResBodyProxy([
-        ...resBodyProxy.slice(0, index),
-        ...resBodyProxy.slice(index + 1),
+      setValue([
+        ...value.slice(0, index),
+        ...value.slice(index + 1),
       ]);
       return;
     }
     let i = index + 1;
-    while (i < resBodyProxy.length) {
-      if (resBodyProxy[i].indent <= resBodyProxy[index].indent) {
+    while (i < value.length) {
+      if (value[i].indent <= value[index].indent) {
         break;
       } else {
         i++;
       }
     }
-    setResBodyProxy([
-      ...resBodyProxy.slice(0, index),
-      ...resBodyProxy.slice(i),
+    setValue([
+      ...value.slice(0, index),
+      ...value.slice(i),
     ]);
 
     // todo：有child的时候收起
@@ -142,7 +145,7 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
   const addContent = (index: number) => {
     return (
       <>
-        { index === 0 || (index > 0 && resBodyProxy[index-1].type !== 'array') ? (
+        { index === 0 || (index > 0 && value[index-1].type !== 'array') ? (
           <p
             className={styles.addContent}
             onClick={() => addField(index, 'sibling')}
@@ -151,7 +154,7 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
           </p>
           ) : null
         }
-        {resBodyProxy[index].type === 'object'  ? (
+        {value[index].type === 'object'  ? (
           <p
             className={styles.addContent}
             onClick={() => addField(index, 'child')}
@@ -183,12 +186,12 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
         <Col span={2}>
           <PlusCircleOutlined
             style={{ color: 'green', cursor: 'pointer' }}
-            onClick={() => addField(resBodyProxy.length, 'sibling')}
+            onClick={() => addField(value.length, 'sibling')}
           />
         </Col>
       </Row>
 
-      {resBodyProxy.map((item: ResBodyType, index:number) => (
+      {value?.map((item: ResBodyType, index:number) => (
         <Row
           key={item.id}
           style={{
@@ -210,7 +213,7 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
                   placeholder="字段名"
                   onBlur={(e) => fieldChange(e.target.value, index, 'element')}
                   style={{ padding: '4px 0' }}
-                  disabled={index > 0 && resBodyProxy[index-1].type === 'array'}
+                  disabled={index > 0 && value[index-1].type === 'array'}
                   defaultValue={item.element}
                 />
               </Col>
@@ -231,11 +234,11 @@ export const Body = ({ initValue }: { initValue: ResBodyType[] }) => {
           </Col>
           <Col span={3}>
             <Input
-              placeholder={resBodyProxy[index].type === 'array' ? '请输入个数' : 'mock语法'}
+              placeholder={value[index].type === 'array' ? '请输入个数' : 'mock语法'}
               bordered={false}
               name="mock"
               disabled={
-                resBodyProxy[index].type === 'object' 
+                value[index].type === 'object' 
                   ? true
                   : false
               }

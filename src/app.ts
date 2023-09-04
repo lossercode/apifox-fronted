@@ -18,7 +18,8 @@ export const layout = () => {
 
 
 export const request: RequestConfig = {
-  baseURL: 'http://127.0.0.1:3000',
+  withCredentials: true,
+  baseURL: 'http://localhost:3000',
   timeout: 3000,
   // other axios options you want
   errorConfig: {
