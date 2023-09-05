@@ -111,7 +111,7 @@ export default function InterfaceTest({
     const body = parseRequest(reqBody)
     const header = parseRequest(reqHeader)
     if (typeof id !== 'undefined') {
-      const result = await getInterfaceResult(id, {
+      const result = await getInterfaceResult(`${id}${url}`, {
         method: method,
         params: {
           ...params,
@@ -126,13 +126,13 @@ export default function InterfaceTest({
           ...header,
         },
       });
-      // if (result.code !== 200) {
-      //   message.error(result.msg);
-      // } else {
-      //   // 第三个参数控制缩进量，不写的话 ace-editor无法换行
-      //   setBody(JSON.stringify(result.data, null, 4));
-      // }
-      console.log(result)
+      if (result.code !== 200) {
+        message.error(result.msg);
+      } else {
+        // 第三个参数控制缩进量，不写的话 ace-editor无法换行
+        setBody(JSON.stringify(result.data, null, 4));
+      }
+      // console.log(result)
     }
   };
   const items = [
@@ -169,7 +169,7 @@ export default function InterfaceTest({
         <Col span={17}>
           <Input
             addonBefore={method || 'GET'}
-            value={`http://127.0.0.1:3000/mock${url}`}
+            value={`http://127.0.0.1:3000/mock/${id}${url}`}
           />
         </Col>
         <Col span={4} offset={2}>
